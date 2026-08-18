@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafío WiFi UNAMAD</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 22px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .question-block {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .options label:hover {
+            background-color: #e8f4fd;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result-screen {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+        .success {
+            color: #27ae60;
+        }
+        .fail {
+            color: #c0392b;
+        }
+        .password-box {
+            font-size: 24px;
+            font-weight: bold;
+            background: #eee;
+            padding: 15px;
+            border-radius: 8px;
+            letter-spacing: 2px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="quiz-container">
+    <h1>Desafío Pre-Uni para WiFi 📚</h1>
+    <p class="subtitle">Responde las 5 preguntas correctamente para obtener la contraseña.</p>
+    
+    <form id="quiz-form">
+        <div id="questions-area"></div>
+        <button type="submit">Revisar Respuestas</button>
+    </form>
+</div>
+
+<div class="container" id="result-screen">
+    <h1 id="result-title"></h1>
+    <p id="result-message"></p>
+    <div id="password-display" style="display: none;">
+        <p>Tu contraseña es:</p>
+        <div class="password-box">Didichee</div>
+    </div>
+    <button id="retry-btn" onclick="location.reload()" style="display: none;">Sigue intentando 🔄</button>
+</div>
+
+<script>
+    const bancoPreguntas = [
+        {
+            pregunta: "¿Cuál es el valor de 'x' en la ecuación: 3x - 5 = 16?",
+            opciones: ["x = 5", "x = 7", "x = 9", "x = 6"],
+            respuestaCorrecta: 1 
+        },
+        {
+            pregunta: "En Razonamiento Matemático, ¿qué número sigue en la sucesión: 2, 6, 12, 20, ...?",
+            opciones: ["28", "32", "30", "24"],
+            respuestaCorrecta: 2 
+        },
+        {
+            pregunta: "Geografía: ¿Cuál es la capital del departamento de Madre de Dios?",
+            opciones: ["Iberia", "Manu", "Tambopata", "Puerto Maldonado"],
+            respuestaCorrecta: 3 
+        },
+        {
+            pregunta: "Física: ¿Cuál es la fórmula del Movimiento Rectilíneo Uniforme (MRU)?",
+            opciones: ["v = d/t", "d = v*t²", "a = v/t", "F = m*a"],
+            respuestaCorrecta: 0 
+        },
+        {
+            pregunta: "Biología: Organela encargada de la respiración celular:",
+            opciones: ["Ribosoma", "Núcleo", "Mitocondria", "Aparato de Golgi"],
+            respuestaCorrecta: 2 
+        },
+        {
+            pregunta: "Aritmética: ¿Cuánto es el 20% del 30% de 500?",
+            opciones: ["30", "40", "25", "50"],
+            respuestaCorrecta: 0 
+        },
+        {
+            pregunta: "Historia del Perú: ¿Quién fue el Inca que fue capturado en Cajamarca?",
+            opciones: ["Huáscar", "Atahualpa", "Pachacútec", "Manco Inca"],
+            respuestaCorrecta: 1 
+        },
+        {
+            pregunta: "Literatura: Autor de 'El Tungsteno'.",
+            opciones: ["José María Arguedas", "Ciro Alegría", "Mario Vargas Llosa", "César Vallejo"],
+            respuestaCorrecta: 3 
+        },
+        {
+            pregunta: "Química: Símbolo químico del Oro.",
+            opciones: ["Ag", "Au", "O", "Or"],
+            respuestaCorrecta: 1 
+        },
+        {
+            pregunta: "Trigonometría: ¿A qué es igual el seno de 30°?",
+            opciones: ["1/2", "√3/2", "1", "√2/2"],
+            respuestaCorrecta: 0 
+        }
+    ];
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const preguntasSeleccionadas = shuffleArray([...bancoPreguntas]).slice(0, 5);
+
+    const questionsArea = document.getElementById('questions-area');
+    
+    preguntasSeleccionadas.forEach((q, index) => {
+        const questionBlock = document.createElement('div');
+        questionBlock.className = 'question-block';
+        
+        let html = `<div class="question-text">${index + 1}. ${q.pregunta}</div><div class="options">`;
+        
+        q.opciones.forEach((opcion, i) => {
+            html += `
+                <label>
+                    <input type="radio" name="q${index}" value="${i}" required>
+                    ${opcion}
+                </label>
+            `;
+        });
+        
+        html += `</div>`;
+        questionBlock.innerHTML = html;
+        questionsArea.appendChild(questionBlock);
+    });
+
+    document.getElementById('quiz-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let correctas = 0;
+        
+        preguntasSeleccionadas.forEach((q, index) => {
+            const seleccionada = document.querySelector(`input[name="q${index}"]:checked`);
+            if (seleccionada && parseInt(seleccionada.value) === q.respuestaCorrecta) {
+                correctas++;
+            }
+        });
+
+        document.getElementById('quiz-container').style.display = 'none';
+        const resultScreen = document.getElementById('result-screen');
+        const resultTitle = document.getElementById('result-title');
+        const resultMessage = document.getElementById('result-message');
+        
+        resultScreen.style.display = 'block';
+
+        if (correctas === 5) {
+            resultTitle.innerHTML = '<span class="success">¡Excelente! 🎉</span>';
+            resultMessage.textContent = 'Respondiste todo bien. Aquí tienes tu recompensa:';
+            document.getElementById('password-display').style.display = 'block';
+        } else {
+            resultTitle.innerHTML = '<span class="fail">Casi... 😅</span>';
+            resultMessage.textContent = `Respondiste bien ${correctas} de 5 preguntas. Necesitas puntuación perfecta.`;
+            document.getElementById('retry-btn').style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>
+
