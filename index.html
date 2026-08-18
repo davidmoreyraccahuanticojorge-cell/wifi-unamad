@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desafío WiFi UNAMAD</title>
+    <title>Simulacro de Admisión UNAMAD - WiFi</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -90,17 +90,26 @@
             letter-spacing: 2px;
             margin: 15px 0;
         }
+        .warning-text {
+            color: #c0392b;
+            font-weight: bold;
+            font-size: 12px;
+            text-align: center;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container" id="quiz-container">
-    <h1>Desafío Pre-Uni para WiFi 📚</h1>
-    <p class="subtitle">Responde las 5 preguntas correctamente para obtener la contraseña.</p>
+    <h1>Admisión UNAMAD 📚<br>¡Gánate el WiFi!</h1>
+    <p class="subtitle">Resuelve 1 pregunta por cada tema del prospecto oficial.</p>
+    <p class="warning-text">⚠️ Tienes que acertar las 12 exactas. Si fallas 1, las preguntas cambiarán.</p>
     
     <form id="quiz-form">
         <div id="questions-area"></div>
-        <button type="submit">Revisar Respuestas</button>
+        <button type="submit">Revisar Examen</button>
     </form>
 </div>
 
@@ -108,72 +117,91 @@
     <h1 id="result-title"></h1>
     <p id="result-message"></p>
     <div id="password-display" style="display: none;">
-        <p>Tu contraseña es:</p>
-        <div class="password-box">Didichee</div>
+        <p>Apto para la UNAMAD. Tu contraseña es:</p>
+        <div class="password-box">milenio1230</div>
     </div>
-    <button id="retry-btn" onclick="location.reload()" style="display: none;">Sigue intentando 🔄</button>
+    <button id="retry-btn" onclick="location.reload()" style="display: none;">Intentar con otro examen 🔄</button>
 </div>
 
 <script>
-    // Banco de preguntas Pre-Uni UNAMAD Madre de Dios (11 preguntas)
-    const bancoPreguntas = [
-        {
-            pregunta: "Cultura Regional: ¿Cuál es la principal Reserva Nacional ubicada en Madre de Dios, conocida mundialmente por su inmensa biodiversidad?",
-            opciones: ["Pacaya Samiria", "Manu", "Tambopata", "Allpahuayo Mishana"],
-            respuestaCorrecta: 2
-        },
-        {
-            pregunta: "Historia Local: La capital de la región, Puerto Maldonado, fue fundada en la confluencia de dos importantes ríos. ¿Cuáles son?",
-            opciones: ["Madre de Dios y Tambopata", "Manu y Colorado", "Las Piedras y Heath", "Acre y Tahuamanu"],
-            respuestaCorrecta: 0
-        },
-        {
-            pregunta: "Razonamiento Matemático: En una serie lógica fundamental para la creación de algoritmos (1, 1, 2, 3, 5, 8, ...), ¿cuál es el siguiente número?",
-            opciones: ["11", "12", "13", "15"],
-            respuestaCorrecta: 2
-        },
-        {
-            pregunta: "Álgebra: Resolver la siguiente ecuación logarítmica: log₂(x - 1) = 3",
-            opciones: ["x = 7", "x = 8", "x = 9", "x = 10"],
-            respuestaCorrecta: 2
-        },
-        {
-            pregunta: "Geometría: En un polígono regular, la suma de sus ángulos internos es 1800°. ¿Cuántos lados tiene el polígono?",
-            opciones: ["10", "12", "14", "16"],
-            respuestaCorrecta: 1
-        },
-        {
-            pregunta: "Física: Determinar el trabajo realizado por una fuerza de 50 N que desplaza un bloque 4 m en su misma dirección.",
-            opciones: ["150 J", "200 J", "250 J", "50 J"],
-            respuestaCorrecta: 1
-        },
-        {
-            pregunta: "Aritmética: Si A es directamente proporcional a B. Cuando A = 12, B = 4. Hallar A cuando B = 6.",
-            opciones: ["18", "16", "24", "14"],
-            respuestaCorrecta: 0
-        },
-        {
-            pregunta: "Trigonometría: Reducir la siguiente expresión: M = sen(30°) + cos(60°)",
-            opciones: ["0", "1/2", "1", "2"],
-            respuestaCorrecta: 2
-        },
-        {
-            pregunta: "Química: ¿Cuál es el hidrocarburo alcano más simple, que además es el principal componente del gas natural?",
-            opciones: ["Etano", "Propano", "Butano", "Metano"],
-            respuestaCorrecta: 3
-        },
-        {
-            pregunta: "Ecología: ¿Qué ecosistema caracteriza principalmente a la región amazónica de Madre de Dios?",
-            opciones: ["Bosque seco ecuatorial", "Bosque de neblina", "Bosque húmedo tropical", "Sabana de palmeras"],
-            respuestaCorrecta: 2
-        },
-        {
-            pregunta: "Lenguaje: Marque la oración que presenta un verbo conjugado en tiempo pretérito perfecto simple.",
-            opciones: ["El sistema está compilando.", "El postulante ingresó a la universidad.", "Nosotros estudiábamos por las tardes.", "Mañana rendiré la prueba."],
-            respuestaCorrecta: 1
-        }
-    ];
+    // Banco maestro de preguntas dividido por los 12 temas del examen
+    const bancoPorTemas = {
+        rm: [
+            { pregunta: "Razonamiento Matemático: ¿Qué número sigue en la secuencia: 2, 6, 12, 20, 30, ...?", opciones: ["40", "42", "36", "38"], correcta: 1 },
+            { pregunta: "Razonamiento Matemático: La edad de Juan es el doble de la de Pedro. Si ambas edades suman 36, ¿cuál es la edad de Pedro?", opciones: ["12", "24", "18", "16"], correcta: 0 },
+            { pregunta: "Razonamiento Matemático: Si A * B = 2A + 3B, calcular el valor de 4 * 5.", opciones: ["23", "18", "25", "20"], correcta: 0 }
+        ],
+        rv: [
+            { pregunta: "Razonamiento Verbal (Sinónimos): Marque el sinónimo de la palabra 'INEFABLE'.", opciones: ["Común", "Indescriptible", "Absurdo", "Elocuente"], correcta: 1 },
+            { pregunta: "Razonamiento Verbal (Analogías): PERRO es a JAURÍA como CERDO es a...", opciones: ["Rebaño", "Piara", "Bandada", "Cardumen"], correcta: 1 },
+            { pregunta: "Razonamiento Verbal (Antónimos): Marque el antónimo de 'EFÍMERO'.", opciones: ["Pasajero", "Duradero", "Corto", "Leve"], correcta: 1 }
+        ],
+        aritmetica: [
+            { pregunta: "Aritmética: ¿Cuánto es el 20% del 40% de 800?", opciones: ["64", "32", "128", "80"], correcta: 0 },
+            { pregunta: "Aritmética: Si 4 obreros hacen una obra en 12 días, ¿en cuántos días harán la misma obra 6 obreros?", opciones: ["8 días", "6 días", "10 días", "9 días"], correcta: 0 },
+            { pregunta: "Aritmética: Hallar el M.C.D. de 24 y 36.", opciones: ["12", "6", "24", "72"], correcta: 0 }
+        ],
+        algebra: [
+            { pregunta: "Álgebra: Resolver la ecuación logarítmica: log₂(x + 2) = 3.", opciones: ["6", "8", "10", "4"], correcta: 0 },
+            { pregunta: "Álgebra: Al desarrollar (x + 3)², se obtiene un trinomio cuadrado perfecto:", opciones: ["x² + 9", "x² + 6x + 9", "x² + 3x + 9", "2x + 6"], correcta: 1 },
+            { pregunta: "Álgebra: Si x³ = 64, hallar el valor de x².", opciones: ["4", "16", "8", "32"], correcta: 1 }
+        ],
+        geometria: [
+            { pregunta: "Geometría: En un triángulo rectángulo, los catetos miden 3 u y 4 u. ¿Cuánto mide la hipotenusa?", opciones: ["5 u", "6 u", "7 u", "12 u"], correcta: 0 },
+            { pregunta: "Geometría: ¿Cuál es la suma de los ángulos internos de un hexágono regular?", opciones: ["360°", "540°", "720°", "900°"], correcta: 2 },
+            { pregunta: "Geometría: Hallar el área de un círculo cuyo diámetro es 10 cm.", opciones: ["10π cm²", "25π cm²", "50π cm²", "100π cm²"], correcta: 1 }
+        ],
+        trigonometria: [
+            { pregunta: "Trigonometría: Hallar el valor de sen(30°) + cos(60°).", opciones: ["0", "1", "1/2", "2"], correcta: 1 },
+            { pregunta: "Trigonometría: Simplificar E = sen²(x) + cos²(x) + tan²(x).", opciones: ["sec²(x)", "csc²(x)", "cot²(x)", "1"], correcta: 0 },
+            { pregunta: "Trigonometría: ¿A cuántos radianes equivale 180°?", opciones: ["π/2 rad", "π rad", "3π/2 rad", "2π rad"], correcta: 1 }
+        ],
+        fisica: [
+            { pregunta: "Física: Un automóvil viaja a 36 km/h. Exprese esta velocidad en m/s.", opciones: ["10 m/s", "20 m/s", "36 m/s", "5 m/s"], correcta: 0 },
+            { pregunta: "Física: Según la 2da Ley de Newton, si aplicamos una fuerza de 20 N a un bloque de 4 kg, la aceleración será:", opciones: ["80 m/s²", "16 m/s²", "5 m/s²", "24 m/s²"], correcta: 2 },
+            { pregunta: "Física: ¿Cuál es la unidad de Trabajo Mecánico en el Sistema Internacional?", opciones: ["Newton (N)", "Watt (W)", "Joule (J)", "Pascal (Pa)"], correcta: 2 }
+        ],
+        quimica: [
+            { pregunta: "Química: Si un elemento tiene un número atómico (Z) de 11 y número de masa (A) de 23, ¿cuántos neutrones tiene en su núcleo?", opciones: ["11", "23", "12", "34"], correcta: 2 },
+            { pregunta: "Química: El hidrocarburo alcano que es el principal componente del gas natural es el...", opciones: ["Etano", "Propano", "Butano", "Metano"], correcta: 3 },
+            { pregunta: "Química: ¿Qué grupo de la tabla periódica corresponde a los gases nobles?", opciones: ["Grupo IA", "Grupo VIIA", "Grupo VIIIA", "Grupo IIA"], correcta: 2 }
+        ],
+        biologia: [
+            { pregunta: "Biología: Organela celular encargada de la respiración celular y producción de energía (ATP).", opciones: ["Ribosoma", "Mitocondria", "Aparato de Golgi", "Lisosoma"], correcta: 1 },
+            { pregunta: "Biología: La sangre humana adquiere su color rojo característico debido a la proteína llamada...", opciones: ["Hemoglobina", "Queratina", "Colágeno", "Miosina"], correcta: 0 },
+            { pregunta: "Biología: El científico considerado padre de la genética que formuló las leyes de la herencia experimentando con guisantes fue...", opciones: ["Charles Darwin", "Louis Pasteur", "Gregor Mendel", "Alexander Fleming"], correcta: 2 }
+        ],
+        lenguaje: [
+            { pregunta: "Lenguaje: Marque la alternativa que contiene una palabra esdrújula.", opciones: ["Examen", "Árbol", "Pájaro", "Sutil"], correcta: 2 },
+            { pregunta: "Lenguaje: ¿Cuántos diptongos hay en la oración: 'El murciélago vuela en la ciudad'?", opciones: ["1", "2", "3", "4"], correcta: 1 }, 
+            { pregunta: "Lenguaje: ¿Qué categoría gramatical cumple la palabra resaltada en 'La casa *roja*'? ", opciones: ["Sustantivo", "Verbo", "Adjetivo", "Adverbio"], correcta: 2 }
+        ],
+        historia: [
+            { pregunta: "Cultura Madre de Dios: La principal Reserva Nacional ubicada en la región, famosa por su biodiversidad, es...", opciones: ["Pacaya Samiria", "Manu", "Tambopata", "Paracas"], correcta: 2 },
+            { pregunta: "Historia del Perú: ¿Quién fue el Inca capturado en la Plaza de Cajamarca por las tropas de Francisco Pizarro?", opciones: ["Huáscar", "Atahualpa", "Manco Inca", "Túpac Amaru"], correcta: 1 },
+            { pregunta: "Historia Universal: ¿Cuál fue la gran civilización de la antigüedad que se desarrolló a orillas del río Nilo?", opciones: ["Mesopotamia", "Egipcia", "Romana", "China"], correcta: 1 }
+        ],
+        civica: [
+            { pregunta: "Educación Cívica: ¿Cuál es el órgano constitucional autónomo en el Perú encargado de organizar los procesos electorales?", opciones: ["JNE", "ONPE", "RENIEC", "Tribunal Constitucional"], correcta: 1 },
+            { pregunta: "Educación Cívica: ¿Cuántos congresistas conforman actualmente el Poder Legislativo peruano?", opciones: ["120", "130", "140", "100"], correcta: 1 },
+            { pregunta: "Educación Cívica: El actual texto constitucional del Perú, promulgado en 1993, fue durante el gobierno de...", opciones: ["Fernando Belaúnde", "Alan García", "Alberto Fujimori", "Alejandro Toledo"], correcta: 2 }
+        ]
+    };
 
+    // Función para obtener 1 elemento aleatorio de una lista
+    function obtenerPreguntaAlAzar(array) {
+        return array[Math.floor(Math.random() * array.length)];
+    }
+
+    // Array que guardará exactamente las 12 preguntas finales (1 por tema)
+    let preguntasSeleccionadas = [];
+
+    // Recorremos los 12 temas. De cada uno, sacamos 1 pregunta aleatoria.
+    for (const tema in bancoPorTemas) {
+        preguntasSeleccionadas.push(obtenerPreguntaAlAzar(bancoPorTemas[tema]));
+    }
+
+    // Mezclamos las 12 preguntas para que los temas no aparezcan en el mismo orden
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -181,12 +209,12 @@
         }
         return array;
     }
-
-    // Selecciona 5 preguntas al azar de las 11 disponibles
-    const preguntasSeleccionadas = shuffleArray([...bancoPreguntas]).slice(0, 5);
+    
+    preguntasSeleccionadas = shuffleArray(preguntasSeleccionadas);
 
     const questionsArea = document.getElementById('questions-area');
     
+    // Imprimimos el examen en la pantalla
     preguntasSeleccionadas.forEach((q, index) => {
         const questionBlock = document.createElement('div');
         questionBlock.className = 'question-block';
@@ -207,6 +235,7 @@
         questionsArea.appendChild(questionBlock);
     });
 
+    // Lógica para revisar si acertó las 12 exactas
     document.getElementById('quiz-form').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -214,7 +243,7 @@
         
         preguntasSeleccionadas.forEach((q, index) => {
             const seleccionada = document.querySelector(`input[name="q${index}"]:checked`);
-            if (seleccionada && parseInt(seleccionada.value) === q.respuestaCorrecta) {
+            if (seleccionada && parseInt(seleccionada.value) === q.correcta) {
                 correctas++;
             }
         });
@@ -226,13 +255,15 @@
         
         resultScreen.style.display = 'block';
 
-        if (correctas === 5) {
-            resultTitle.innerHTML = '<span class="success">¡Excelente! 🎉</span>';
-            resultMessage.textContent = 'Respondiste todo bien. Aquí tienes tu recompensa:';
+        if (correctas === 12) { 
+            // Tiene que tener 12 de 12 para pasar
+            resultTitle.innerHTML = '<span class="success">¡Ingresaste! 🎉</span>';
+            resultMessage.textContent = 'Aprobaste el examen perfecto. Aquí tienes tu recompensa:';
             document.getElementById('password-display').style.display = 'block';
         } else {
-            resultTitle.innerHTML = '<span class="fail">Casi... 😅</span>';
-            resultMessage.textContent = `Respondiste bien ${correctas} de 5 preguntas. Necesitas puntuación perfecta.`;
+            // Si tiene 11 o menos, ya fue.
+            resultTitle.innerHTML = '<span class="fail">Desaprobado ❌</span>';
+            resultMessage.textContent = `Tuviste ${correctas} correctas de 12. Necesitas puntaje perfecto. Ni modo, las preguntas acaban de cambiar. ¡Suerte en el siguiente intento!`;
             document.getElementById('retry-btn').style.display = 'block';
         }
     });
