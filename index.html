@@ -115,56 +115,62 @@
 </div>
 
 <script>
+    // Banco de preguntas Pre-Uni UNAMAD Madre de Dios (11 preguntas)
     const bancoPreguntas = [
         {
-            pregunta: "¿Cuál es el valor de 'x' en la ecuación: 3x - 5 = 16?",
-            opciones: ["x = 5", "x = 7", "x = 9", "x = 6"],
-            respuestaCorrecta: 1 
+            pregunta: "Cultura Regional: ¿Cuál es la principal Reserva Nacional ubicada en Madre de Dios, conocida mundialmente por su inmensa biodiversidad?",
+            opciones: ["Pacaya Samiria", "Manu", "Tambopata", "Allpahuayo Mishana"],
+            respuestaCorrecta: 2
         },
         {
-            pregunta: "En Razonamiento Matemático, ¿qué número sigue en la sucesión: 2, 6, 12, 20, ...?",
-            opciones: ["28", "32", "30", "24"],
-            respuestaCorrecta: 2 
+            pregunta: "Historia Local: La capital de la región, Puerto Maldonado, fue fundada en la confluencia de dos importantes ríos. ¿Cuáles son?",
+            opciones: ["Madre de Dios y Tambopata", "Manu y Colorado", "Las Piedras y Heath", "Acre y Tahuamanu"],
+            respuestaCorrecta: 0
         },
         {
-            pregunta: "Geografía: ¿Cuál es la capital del departamento de Madre de Dios?",
-            opciones: ["Iberia", "Manu", "Tambopata", "Puerto Maldonado"],
-            respuestaCorrecta: 3 
+            pregunta: "Razonamiento Matemático: En una serie lógica fundamental para la creación de algoritmos (1, 1, 2, 3, 5, 8, ...), ¿cuál es el siguiente número?",
+            opciones: ["11", "12", "13", "15"],
+            respuestaCorrecta: 2
         },
         {
-            pregunta: "Física: ¿Cuál es la fórmula del Movimiento Rectilíneo Uniforme (MRU)?",
-            opciones: ["v = d/t", "d = v*t²", "a = v/t", "F = m*a"],
-            respuestaCorrecta: 0 
+            pregunta: "Álgebra: Resolver la siguiente ecuación logarítmica: log₂(x - 1) = 3",
+            opciones: ["x = 7", "x = 8", "x = 9", "x = 10"],
+            respuestaCorrecta: 2
         },
         {
-            pregunta: "Biología: Organela encargada de la respiración celular:",
-            opciones: ["Ribosoma", "Núcleo", "Mitocondria", "Aparato de Golgi"],
-            respuestaCorrecta: 2 
+            pregunta: "Geometría: En un polígono regular, la suma de sus ángulos internos es 1800°. ¿Cuántos lados tiene el polígono?",
+            opciones: ["10", "12", "14", "16"],
+            respuestaCorrecta: 1
         },
         {
-            pregunta: "Aritmética: ¿Cuánto es el 20% del 30% de 500?",
-            opciones: ["30", "40", "25", "50"],
-            respuestaCorrecta: 0 
+            pregunta: "Física: Determinar el trabajo realizado por una fuerza de 50 N que desplaza un bloque 4 m en su misma dirección.",
+            opciones: ["150 J", "200 J", "250 J", "50 J"],
+            respuestaCorrecta: 1
         },
         {
-            pregunta: "Historia del Perú: ¿Quién fue el Inca que fue capturado en Cajamarca?",
-            opciones: ["Huáscar", "Atahualpa", "Pachacútec", "Manco Inca"],
-            respuestaCorrecta: 1 
+            pregunta: "Aritmética: Si A es directamente proporcional a B. Cuando A = 12, B = 4. Hallar A cuando B = 6.",
+            opciones: ["18", "16", "24", "14"],
+            respuestaCorrecta: 0
         },
         {
-            pregunta: "Literatura: Autor de 'El Tungsteno'.",
-            opciones: ["José María Arguedas", "Ciro Alegría", "Mario Vargas Llosa", "César Vallejo"],
-            respuestaCorrecta: 3 
+            pregunta: "Trigonometría: Reducir la siguiente expresión: M = sen(30°) + cos(60°)",
+            opciones: ["0", "1/2", "1", "2"],
+            respuestaCorrecta: 2
         },
         {
-            pregunta: "Química: Símbolo químico del Oro.",
-            opciones: ["Ag", "Au", "O", "Or"],
-            respuestaCorrecta: 1 
+            pregunta: "Química: ¿Cuál es el hidrocarburo alcano más simple, que además es el principal componente del gas natural?",
+            opciones: ["Etano", "Propano", "Butano", "Metano"],
+            respuestaCorrecta: 3
         },
         {
-            pregunta: "Trigonometría: ¿A qué es igual el seno de 30°?",
-            opciones: ["1/2", "√3/2", "1", "√2/2"],
-            respuestaCorrecta: 0 
+            pregunta: "Ecología: ¿Qué ecosistema caracteriza principalmente a la región amazónica de Madre de Dios?",
+            opciones: ["Bosque seco ecuatorial", "Bosque de neblina", "Bosque húmedo tropical", "Sabana de palmeras"],
+            respuestaCorrecta: 2
+        },
+        {
+            pregunta: "Lenguaje: Marque la oración que presenta un verbo conjugado en tiempo pretérito perfecto simple.",
+            opciones: ["El sistema está compilando.", "El postulante ingresó a la universidad.", "Nosotros estudiábamos por las tardes.", "Mañana rendiré la prueba."],
+            respuestaCorrecta: 1
         }
     ];
 
@@ -176,6 +182,7 @@
         return array;
     }
 
+    // Selecciona 5 preguntas al azar de las 11 disponibles
     const preguntasSeleccionadas = shuffleArray([...bancoPreguntas]).slice(0, 5);
 
     const questionsArea = document.getElementById('questions-area');
@@ -233,4 +240,3 @@
 
 </body>
 </html>
-
