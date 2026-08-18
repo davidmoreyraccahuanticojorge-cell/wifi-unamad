@@ -5,113 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulacro de Admisión UNAMAD - WiFi</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            background-color: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 500px;
-            width: 100%;
-        }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            font-size: 22px;
-        }
-        p.subtitle {
-            text-align: center;
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .question-block {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            background-color: #fafafa;
-        }
-        .question-text {
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 15px;
-        }
-        .options label {
-            display: block;
-            margin-bottom: 8px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 5px;
-            transition: background-color 0.2s;
-            font-size: 14px;
-        }
-        .options label:hover {
-            background-color: #e8f4fd;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #c0392b;
-        }
-        #result-screen {
-            display: none;
-            text-align: center;
-            padding: 20px 0;
-        }
-        .success {
-            color: #27ae60;
-        }
-        .fail {
-            color: #c0392b;
-        }
-        .password-box {
-            font-size: 24px;
-            font-weight: bold;
-            background: #eee;
-            padding: 15px;
-            border-radius: 8px;
-            letter-spacing: 2px;
-            margin: 15px 0;
-            color: #2c3e50;
-        }
-        .warning-text {
-            color: #c0392b;
-            font-weight: bold;
-            font-size: 13px;
-            text-align: center;
-            margin-top: -10px;
-            margin-bottom: 20px;
-            padding: 10px;
-            background-color: #fdeedc;
-            border-radius: 5px;
-            border: 1px solid #f39c12;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { background-color: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 500px; width: 100%; }
+        h1 { text-align: center; color: #2c3e50; font-size: 22px; }
+        p.subtitle { text-align: center; color: #7f8c8d; font-size: 14px; margin-bottom: 20px; }
+        .question-block { margin-bottom: 20px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #fafafa; }
+        .question-text { font-weight: bold; margin-bottom: 10px; font-size: 15px; }
+        .options label { display: block; margin-bottom: 8px; cursor: pointer; padding: 8px; border-radius: 5px; transition: background-color 0.2s; font-size: 14px; }
+        .options label:hover { background-color: #e8f4fd; }
+        button { width: 100%; padding: 12px; background-color: #e74c3c; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
+        button:hover { background-color: #c0392b; }
+        #result-screen { display: none; text-align: center; padding: 20px 0; }
+        .success { color: #27ae60; }
+        .fail { color: #c0392b; }
+        .password-box { font-size: 24px; font-weight: bold; background: #eee; padding: 15px; border-radius: 8px; letter-spacing: 2px; margin: 15px 0; color: #2c3e50; }
+        .warning-text { color: #c0392b; font-weight: bold; font-size: 13px; text-align: center; margin-top: -10px; margin-bottom: 20px; padding: 10px; background-color: #fdeedc; border-radius: 5px; border: 1px solid #f39c12; }
     </style>
 </head>
 <body>
 
 <div class="container" id="quiz-container">
     <h1>Admisión UNAMAD 📚<br>¡Gánate el WiFi!</h1>
-    <p class="warning-text">⚠️ MODO ESTRICTO: Si cambias de pestaña, cierras la app o buscas en Google, el examen detectará la trampa, se anulará y las preguntas cambiarán.</p>
+    <p class="warning-text">⚠️ MODO ESTRICTO: Si minimizas el navegador o cambias de aplicación para buscar en Google, el examen detectará la trampa y se anulará.</p>
     <p class="subtitle">Resuelve 1 pregunta por cada tema del prospecto oficial para conseguir la clave.</p>
     
     <form id="quiz-form">
@@ -131,175 +46,178 @@
 </div>
 
 <script>
-    // SISTEMA ANTI-TRAMPA
+    // SISTEMA ANTI-TRAMPA (Optimizado para celular)
     document.addEventListener("visibilitychange", function() {
         if (document.hidden) {
-            alert("🚨 ¡TRAMPA DETECTADA! 🚨\nTe saliste de la página para buscar la respuesta. El examen ha sido anulado y se reiniciará con nuevas preguntas.");
+            alert("🚨 ¡TRAMPA DETECTADA! 🚨\nTe saliste de la página para buscar la respuesta. El examen ha sido anulado.");
             location.reload();
         }
     });
-    window.addEventListener("blur", function() {
-        alert("🚨 ¡TRAMPA DETECTADA! 🚨\nPerdiste el enfoque de la ventana. El examen se reiniciará.");
-        location.reload();
-    });
 
-    // BANCO MAESTRO: 192 PREGUNTAS (16 por tema)
-    const b = {
-        rm: [
-            { q: "RM: ¿Qué número sigue: 2, 6, 12, 20, 30...?", o: ["36", "42", "40", "38"], c: 1 },
-            { q: "RM: Juan tiene el doble de la edad de Pedro. Suman 36. ¿Edad de Pedro?", o: ["12", "24", "18", "16"], c: 0 },
-            { q: "RM: Si A*B = 2A + 3B, calcular 4*5.", o: ["23", "18", "25", "20"], c: 0 },
-            { q: "RM: Si el mañana del pasado mañana de ayer es viernes, ¿qué día es hoy?", o: ["Jueves", "Miércoles", "Viernes", "Martes"], c: 1 },
-            { q: "RM: ¿Qué número sigue: 1, 1, 2, 3, 5, 8...?", o: ["11", "12", "13", "15"], c: 2 },
-            { q: "RM: ¿Cuánto es la mitad de la tercera parte de 60?", o: ["10", "20", "5", "15"], c: 0 },
-            { q: "RM: Probabilidad de lanzar un dado y que salga par:", o: ["1/6", "1/2", "1/3", "1/4"], c: 1 },
-            { q: "RM: 3 gatos cazan 3 ratones en 3 min. ¿10 gatos cazan 10 ratones en...?", o: ["10 min", "1 min", "3 min", "30 min"], c: 2 },
-            { q: "RM: Un número más su mitad es 30. ¿Cuál es el número?", o: ["15", "20", "25", "10"], c: 1 },
-            { q: "RM: 20 monedas de S/2 y S/5 suman S/70. ¿Cuántas son de S/5?", o: ["10", "12", "8", "5"], c: 0 },
-            { q: "RM: ¿Qué número sigue: 1, 4, 9, 16, 25...?", o: ["30", "32", "36", "49"], c: 2 },
-            { q: "RM: ¿Cuánto es el 10% del 20% de 1000?", o: ["10", "20", "50", "100"], c: 1 },
-            { q: "RM: Ángulo que forman las agujas del reloj a las 3:00 exactas:", o: ["45°", "60°", "90°", "120°"], c: 2 },
-            { q: "RM: El perímetro de un cuadrado es 16. ¿Cuál es su área?", o: ["8", "12", "16", "24"], c: 2 },
-            { q: "RM: Si a=2 y b=3, calcular: a^b + b^a", o: ["12", "15", "17", "20"], c: 2 },
-            { q: "RM: ¿Cuántos triángulos hay en un cuadrado cruzado por 2 diagonales?", o: ["4", "6", "8", "10"], c: 2 }
-        ],
-        rv: [
-            { q: "RV: Sinónimo de INEFABLE:", o: ["Común", "Indescriptible", "Absurdo", "Elocuente"], c: 1 },
-            { q: "RV: Analogía - PERRO : JAURÍA ::", o: ["Pez : Manada", "Cerdo : Piara", "Ave : Cardumen", "Lobo : Rebaño"], c: 1 },
-            { q: "RV: Antónimo de EFÍMERO:", o: ["Pasajero", "Duradero", "Corto", "Leve"], c: 1 },
-            { q: "RV: Sinónimo de MENGUAR:", o: ["Aumentar", "Disminuir", "Soportar", "Crear"], c: 1 },
-            { q: "RV: Antónimo de ALTRUISMO:", o: ["Bondad", "Egoísmo", "Empatía", "Soberbia"], c: 1 },
-            { q: "RV: Sinónimo de PERSPICAZ:", o: ["Lento", "Astuto", "Fuerte", "Torpe"], c: 1 },
-            { q: "RV: Antónimo de LOCUAZ:", o: ["Charlatán", "Taciturno", "Veloz", "Feliz"], c: 1 },
-            { q: "RV: Sinónimo de BASTO:", o: ["Fino", "Amplio", "Tosco", "Suave"], c: 2 },
-            { q: "RV: Antónimo de SOBERBIA:", o: ["Orgullo", "Ira", "Humildad", "Tristeza"], c: 2 },
-            { q: "RV: Analogía - PINTOR : CUADRO ::", o: ["Músico : Notas", "Escultor : Estatua", "Poeta : Rimas", "Actor : Cine"], c: 1 },
-            { q: "RV: Sinónimo de LÓBREGO:", o: ["Claro", "Feliz", "Oscuro", "Ancho"], c: 2 },
-            { q: "RV: Antónimo de INNATO:", o: ["Natural", "Adquirido", "Propio", "Genético"], c: 1 },
-            { q: "RV: Analogía - PEZ : CARDUMEN ::", o: ["Cerdo : Manada", "Ave : Bandada", "Lobo : Piara", "Perro : Rebaño"], c: 1 },
-            { q: "RV: Sinónimo de GÉLIDO:", o: ["Caliente", "Tibio", "Helado", "Fresco"], c: 2 },
-            { q: "RV: Antónimo de CÚSPIDE:", o: ["Cima", "Pico", "Base", "Borde"], c: 2 },
-            { q: "RV: Analogía - PÁGINA : LIBRO ::", o: ["Letra : Palabra", "Tecla : Piano", "Llanta : Timón", "Agua : Vaso"], c: 1 }
-        ],
-        ari: [
-            { q: "Aritmética: ¿Cuánto es el 20% del 40% de 800?", o: ["64", "32", "128", "80"], c: 0 },
-            { q: "Aritmética: 4 obreros hacen una obra en 12 días. ¿En cuántos días lo harán 6 obreros?", o: ["8", "6", "10", "9"], c: 0 },
-            { q: "Aritmética: M.C.D. de 24 y 36:", o: ["12", "6", "24", "72"], c: 0 },
-            { q: "Aritmética: Promedio aritmético de 4, 8, 12 y 16:", o: ["8", "10", "12", "14"], c: 1 },
-            { q: "Aritmética: M.C.M. de 12 y 15:", o: ["30", "45", "60", "90"], c: 2 },
-            { q: "Aritmética: Sumar 3/4 + 1/2", o: ["4/6", "5/4", "1", "1.5"], c: 1 },
-            { q: "Aritmética: 15 es el ¿qué porcentaje? de 60", o: ["15%", "20%", "25%", "30%"], c: 2 },
-            { q: "Aritmética: Números primos menores que 10:", o: ["1,3,5,7", "2,3,5,7", "2,4,6,8", "3,5,7,9"], c: 1 },
-            { q: "Aritmética: Valor de 5! (factorial):", o: ["20", "60", "120", "100"], c: 2 },
-            { q: "Aritmética: Raíz cuadrada de 144:", o: ["10", "11", "12", "14"], c: 2 },
-            { q: "Aritmética: Si a/b = 2/3 y a+b = 20, hallar 'a':", o: ["8", "10", "12", "6"], c: 0 },
-            { q: "Aritmética: Convertir 0.25 a fracción:", o: ["1/2", "1/4", "1/5", "2/5"], c: 1 },
-            { q: "Aritmética: Si A={1,2,3} y B={3,4}, ¿cuál es la unión A U B?", o: ["{3}", "{1,2}", "{1,2,3,4}", "{4}"], c: 2 },
-            { q: "Aritmética: Valor de 2^3 * 2^2:", o: ["16", "32", "64", "10"], c: 1 },
-            { q: "Aritmética: Dividir 1000 / 25:", o: ["25", "40", "50", "20"], c: 1 },
-            { q: "Aritmética: El número 12345 es divisible por:", o: ["2", "3", "4", "6"], c: 1 }
-        ],
-        alg: [
-            { q: "Álgebra: Resolver: log₂(x + 2) = 3", o: ["6", "8", "10", "4"], c: 0 },
-            { q: "Álgebra: Desarrollar (x + 3)²", o: ["x²+9", "x²+6x+9", "x²+3x+9", "2x+6"], c: 1 },
-            { q: "Álgebra: Si x³ = 64, hallar x²", o: ["4", "16", "8", "32"], c: 1 },
-            { q: "Álgebra: Hallar x en: 3^(x-1) = 81", o: ["3", "4", "5", "6"], c: 2 },
-            { q: "Álgebra: Resolver: 2x - 5 = 11", o: ["6", "7", "8", "9"], c: 2 },
-            { q: "Álgebra: Factorizar x² - 9", o: ["(x-3)²", "(x-3)(x+3)", "(x+3)²", "x(x-9)"], c: 1 },
-            { q: "Álgebra: Si x+y=5 y x-y=1, hallar x:", o: ["2", "3", "4", "5"], c: 1 },
-            { q: "Álgebra: Si P(x)=2x+3, hallar P(2)", o: ["5", "6", "7", "8"], c: 2 },
-            { q: "Álgebra: Raíces de x²-5x+6=0", o: ["2 y 3", "-2 y -3", "1 y 6", "6 y -1"], c: 0 },
-            { q: "Álgebra: Dominio de f(x) = √(x-1)", o: ["x > 0", "x >= 1", "x < 1", "R"], c: 1 },
-            { q: "Álgebra: Valor de 5^0 + 3^1", o: ["3", "4", "8", "5"], c: 1 },
-            { q: "Álgebra: (a+b)(a-b) es igual a:", o: ["a²+b²", "a²-b²", "2a-2b", "a²+2ab+b²"], c: 1 },
-            { q: "Álgebra: Grado absoluto de 3x²y³:", o: ["2", "3", "5", "6"], c: 2 },
-            { q: "Álgebra: Si |x| = 5, entonces x puede ser:", o: ["Solo 5", "Solo -5", "5 o -5", "0"], c: 2 },
-            { q: "Álgebra: Resolver x/2 + x/3 = 5", o: ["5", "6", "10", "12"], c: 1 },
-            { q: "Álgebra: Si x² = 49, x es:", o: ["7", "7 o -7", "-7", "14"], c: 1 }
-        ],
-        geo: [
-            { q: "Geometría: Triángulo rectángulo con catetos 3 y 4. ¿Hipotenusa?", o: ["5", "6", "7", "12"], c: 0 },
-            { q: "Geometría: Suma de ángulos internos de un hexágono regular:", o: ["360°", "540°", "720°", "900°"], c: 2 },
-            { q: "Geometría: Área de círculo con diámetro 10:", o: ["10π", "25π", "50π", "100π"], c: 1 },
-            { q: "Geometría: Diagonales trazadas desde un vértice en un octágono:", o: ["3", "4", "5", "8"], c: 2 },
-            { q: "Geometría: Volumen de un cubo de lado 3:", o: ["9", "18", "27", "81"], c: 2 },
-            { q: "Geometría: Suma de ángulos internos de todo triángulo:", o: ["90°", "180°", "270°", "360°"], c: 1 },
-            { q: "Geometría: Ángulo inscrito en una semicircunferencia mide:", o: ["45°", "60°", "90°", "180°"], c: 2 },
-            { q: "Geometría: Área de triángulo base 10 y altura 5:", o: ["15", "25", "50", "100"], c: 1 },
-            { q: "Geometría: Perímetro de un rectángulo de 4x6:", o: ["10", "20", "24", "48"], c: 1 },
-            { q: "Geometría: Cada ángulo interno de un triángulo equilátero mide:", o: ["45°", "60°", "90°", "120°"], c: 1 },
-            { q: "Geometría: Diagonales totales de un pentágono:", o: ["5", "10", "15", "20"], c: 0 },
-            { q: "Geometría: Área de trapecio bases 4 y 6, altura 3:", o: ["10", "15", "20", "30"], c: 1 },
-            { q: "Geometría: Longitud de circunferencia de radio 5:", o: ["5π", "10π", "20π", "25π"], c: 1 },
-            { q: "Geometría: Fórmula del volumen del cilindro:", o: ["πr²h", "2πrh", "πr²", "4/3πr³"], c: 0 },
-            { q: "Geometría: Área de un cuadrado de perímetro 36:", o: ["36", "72", "81", "144"], c: 2 },
-            { q: "Geometría: Complemento de 30°:", o: ["60°", "90°", "150°", "180°"], c: 0 }
-        ],
-        tri: [
-            { q: "Trigonometría: sen(30°) + cos(60°)", o: ["0", "1", "1/2", "2"], c: 1 },
-            { q: "Trigonometría: Simplificar: sen²x + cos²x + tan²x", o: ["sec²x", "csc²x", "cot²x", "1"], c: 0 },
-            { q: "Trigonometría: Equivalencia de 180° en radianes:", o: ["π/2", "π", "3π/2", "2π"], c: 1 },
-            { q: "Trigonometría: En triángulo rectángulo, si sen(x)=3/5, ¿cos(x)?", o: ["4/5", "3/4", "5/3", "1/2"], c: 0 },
-            { q: "Trigonometría: Valor de tan(45°):", o: ["0", "1/2", "1", "√2"], c: 2 },
-            { q: "Trigonometría: Valor de sec(60°):", o: ["1", "√2", "2", "Indefinido"], c: 2 },
-            { q: "Trigonometría: Valor de csc(30°):", o: ["1", "2", "3", "1/2"], c: 1 },
-            { q: "Trigonometría: 90° en radianes es:", o: ["π/4", "π/3", "π/2", "π"], c: 2 },
-            { q: "Trigonometría: Valor de sen(90°):", o: ["0", "1", "-1", "Indefinido"], c: 1 },
-            { q: "Trigonometría: Valor de cos(0°):", o: ["0", "1", "-1", "Indefinido"], c: 1 },
-            { q: "Trigonometría: tan(x) es igual a:", o: ["senx/cosx", "cosx/senx", "1/senx", "1/cosx"], c: 0 },
-            { q: "Trigonometría: En el II Cuadrante, el seno es:", o: ["Positivo", "Negativo", "Nulo", "Indefinido"], c: 0 },
-            { q: "Trigonometría: 1 - sen²x es igual a:", o: ["tan²x", "sec²x", "cos²x", "csc²x"], c: 2 },
-            { q: "Trigonometría: Seno se define como:", o: ["CA/H", "CO/H", "CO/CA", "H/CO"], c: 1 },
-            { q: "Trigonometría: Valor de cos(60°):", o: ["1", "√3/2", "1/2", "0"], c: 2 },
-            { q: "Trigonometría: Valor de tan(30°):", o: ["1", "√3", "√3/3", "1/2"], c: 2 }
-        ],
-        fis: [
-            { q: "Física: 36 km/h en m/s es:", o: ["10 m/s", "20 m/s", "36 m/s", "5 m/s"], c: 0 },
-            { q: "Física: 2da Ley de Newton: 20 N a un bloque de 4 kg. ¿Aceleración?", o: ["80", "16", "5", "24"], c: 2 },
-            { q: "Física: Unidad de Trabajo Mecánico en el SI:", o: ["Newton", "Watt", "Joule", "Pascal"], c: 2 },
-            { q: "Física: Caída libre (g=10), ¿velocidad luego de 3 s?", o: ["10", "20", "30", "15"], c: 2 },
-            { q: "Física: Fórmula de la Fuerza (2da ley):", o: ["m/a", "m*v", "m*a", "a/m"], c: 2 },
-            { q: "Física: Unidad de la Potencia en el SI:", o: ["Joule", "Watt", "Newton", "Hertz"], c: 1 },
-            { q: "Física: Energía Cinética fórmula:", o: ["mgh", "1/2 mv²", "F*d", "m*a"], c: 1 },
-            { q: "Física: Energía Potencial fórmula:", o: ["1/2 mv²", "m*v", "mgh", "F/A"], c: 2 },
-            { q: "Física: 1ra Ley de Newton es conocida como Ley de:", o: ["Acción", "Inercia", "Masa", "Gravedad"], c: 1 },
-            { q: "Física: 3ra Ley de Newton es conocida como Ley de:", o: ["Inercia", "Acción y reacción", "Fuerza", "Termodinámica"], c: 1 },
-            { q: "Física: En el MRU la aceleración es:", o: ["Constante", "Variable", "Cero", "Gravedad"], c: 2 },
-            { q: "Física: Densidad del agua pura (aprox):", o: ["100 kg/m³", "1000 kg/m³", "10 kg/m³", "1 kg/m³"], c: 1 },
-            { q: "Física: Unidad de Presión en el SI:", o: ["Pascal", "Joule", "Newton", "Watt"], c: 0 },
-            { q: "Física: Transferencia de calor en sólidos:", o: ["Convección", "Radiación", "Conducción", "Fricción"], c: 2 },
-            { q: "Física: Velocidad de la luz en el vacío (aprox):", o: ["300 m/s", "340 m/s", "300,000 km/s", "150,000 km/s"], c: 2 },
-            { q: "Física: La fórmula d = v*t pertenece a:", o: ["MRUV", "Caída libre", "MRU", "MCU"], c: 2 }
-        ],
-        qui: [
-            { q: "Química: Si Z=11 y A=23, ¿cuántos neutrones tiene?", o: ["11", "23", "12", "34"], c: 2 },
-            { q: "Química: Alcano principal componente del gas natural:", o: ["Etano", "Propano", "Butano", "Metano"], c: 3 },
-            { q: "Química: Grupo de la tabla periódica de los gases nobles:", o: ["IA", "VIIA", "VIIIA", "IIA"], c: 2 },
-            { q: "Química: Fórmula del ácido sulfúrico:", o: ["HCl", "H2SO4", "HNO3", "NaCl"], c: 1 },
-            { q: "Química: Símbolo del Oro:", o: ["Ag", "Au", "Or", "O"], c: 1 },
-            { q: "Química: Enlace de la molécula de agua (H2O):", o: ["Iónico", "Metálico", "Covalente", "Puente de H (intramolecular)"], c: 2 },
-            { q: "Química: Carga del protón:", o: ["Negativa", "Neutra", "Positiva", "Variable"], c: 2 },
-            { q: "Química: Descubridor del electrón:", o: ["Rutherford", "Bohr", "Thomson", "Dalton"], c: 2 },
-            { q: "Química: pH del agua pura:", o: ["0", "7", "14", "5"], c: 1 },
-            { q: "Química: Gas más abundante en la atmósfera:", o: ["Oxígeno", "Hidrógeno", "Nitrógeno", "CO2"], c: 2 },
-            { q: "Química: El NaCl (cloruro de sodio) es comúnmente:", o: ["Azúcar", "Sal de mesa", "Bicarbonato", "Lejía"], c: 1 },
-            { q: "Química: La química orgánica estudia principalmente al:", o: ["Oxígeno", "Carbono", "Nitrógeno", "Azufre"], c: 1 },
-            { q: "Química: La oxidación implica:", o: ["Ganar protones", "Ganar electrones", "Perder electrones", "Perder neutrones"], c: 2 },
-            { q: "Química: Número de enlaces que forma el carbono (tetravalencia):", o: ["2", "3", "4", "5"], c: 2 },
-            { q: "Química: Símbolo de la Plata:", o: ["Pt", "Pl", "Ag", "Au"], c: 2 },
-            { q: "Química: Fórmula química del agua:", o: ["H2O2", "HO", "H2O", "OH"], c: 2 }
-        ],
-        bio: [
-            { q: "Biología: Organela que produce energía (ATP):", o: ["Ribosoma", "Mitocondria", "Golgi", "Lisosoma"], c: 1 },
-            { q: "Biología: Proteína que da color rojo a la sangre:", o: ["Hemoglobina", "Queratina", "Colágeno", "Miosina"], c: 0 },
-            { q: "Biología: Padre de la genética:", o: ["Darwin", "Pasteur", "Mendel", "Fleming"], c: 2 },
-            { q: "Biología: ¿Cuál NO es un reino biológico?", o: ["Fungi", "Animalia", "Protista", "Mineralia"], c: 3 },
-            { q: "Biología: Organela donde ocurre la fotosíntesis:", o: ["Mitocondria", "Ribosoma", "Cloroplasto", "Núcleo"], c: 2 },
-            { q: "Biología: Número de cromosomas en célula somática humana:", o: ["23", "46", "48", "21"], c: 1 },
-            { q: "Biología: En el ADN, la Adenina se une con:", o: ["Citosina", "Guanina", "Timina", "Uracilo"], c: 2 },
-            { q: "Biología: División celular de células somáticas:", o: ["Meiosis", "Mitosis", "Bipartición", "Gemación"], c: 1 },
-            { q: "Biología: Órgano más grande del cuerpo humano:", o: ["Hígado", "Corazón", "Piel", "Cerebro"], c: 2 },
-            { q: "Biología: Grupo sanguíneo donante universal:", o: ["A", "B", "AB", "O"], c: 3 },
-            { q: "Biología: Reino al que pertenecen las bacterias:", o: ["Protista", "Fungi", "Monera", "Plantae"], c: 2 },
-            { q: "Biología: El VIH ataca principalmente al sistema:", o: ["Nervioso", "Digestivo", "Inmunológico", "Respiratorio"], c: 2 },
-            { q: "Biología: Vitamina que se sintetiza con la luz solar
+    try {
+        // BANCO DE DATOS (60 preguntas en total, 244 millones de combinaciones)
+        const b = {
+            rm: [
+                { q: "RM: ¿Qué número sigue: 2, 6, 12, 20, 30...?", o: ["36", "42", "40", "38"], c: 1 },
+                { q: "RM: Juan tiene el doble de la edad de Pedro. Suman 36. ¿Edad de Pedro?", o: ["12", "24", "18", "16"], c: 0 },
+                { q: "RM: Si A*B = 2A + 3B, calcular 4*5.", o: ["23", "18", "25", "20"], c: 0 },
+                { q: "RM: Si el mañana del pasado mañana de ayer es viernes, ¿qué día es hoy?", o: ["Jueves", "Miércoles", "Viernes", "Martes"], c: 1 },
+                { q: "RM: Probabilidad de lanzar un dado y que salga par:", o: ["1/6", "1/2", "1/3", "1/4"], c: 1 }
+            ],
+            rv: [
+                { q: "RV: Sinónimo de INEFABLE:", o: ["Común", "Indescriptible", "Absurdo", "Elocuente"], c: 1 },
+                { q: "RV: Analogía - PERRO : JAURÍA ::", o: ["Pez : Manada", "Cerdo : Piara", "Ave : Cardumen", "Lobo : Rebaño"], c: 1 },
+                { q: "RV: Antónimo de EFÍMERO:", o: ["Pasajero", "Duradero", "Corto", "Leve"], c: 1 },
+                { q: "RV: Sinónimo de MENGUAR:", o: ["Aumentar", "Disminuir", "Soportar", "Crear"], c: 1 },
+                { q: "RV: Antónimo de ALTRUISMO:", o: ["Bondad", "Egoísmo", "Empatía", "Soberbia"], c: 1 }
+            ],
+            ari: [
+                { q: "Aritmética: ¿Cuánto es el 20% del 40% de 800?", o: ["64", "32", "128", "80"], c: 0 },
+                { q: "Aritmética: 4 obreros hacen una obra en 12 días. ¿En cuántos días lo harán 6 obreros?", o: ["8", "6", "10", "9"], c: 0 },
+                { q: "Aritmética: M.C.D. de 24 y 36:", o: ["12", "6", "24", "72"], c: 0 },
+                { q: "Aritmética: Promedio aritmético de 4, 8, 12 y 16:", o: ["8", "10", "12", "14"], c: 1 },
+                { q: "Aritmética: M.C.M. de 12 y 15:", o: ["30", "45", "60", "90"], c: 2 }
+            ],
+            alg: [
+                { q: "Álgebra: Resolver log₂(x + 2) = 3", o: ["6", "8", "10", "4"], c: 0 },
+                { q: "Álgebra: Desarrollar (x + 3)²", o: ["x²+9", "x²+6x+9", "x²+3x+9", "2x+6"], c: 1 },
+                { q: "Álgebra: Si x³ = 64, hallar x²", o: ["4", "16", "8", "32"], c: 1 },
+                { q: "Álgebra: Hallar x en: 3^(x-1) = 81", o: ["3", "4", "5", "6"], c: 2 },
+                { q: "Álgebra: Resolver: 2x - 5 = 11", o: ["6", "7", "8", "9"], c: 2 }
+            ],
+            geo: [
+                { q: "Geometría: Triángulo rectángulo con catetos 3 y 4. ¿Hipotenusa?", o: ["5", "6", "7", "12"], c: 0 },
+                { q: "Geometría: Suma de ángulos internos de un hexágono regular:", o: ["360°", "540°", "720°", "900°"], c: 2 },
+                { q: "Geometría: Área de círculo con diámetro 10:", o: ["10π", "25π", "50π", "100π"], c: 1 },
+                { q: "Geometría: Diagonales trazadas desde un vértice en un octágono:", o: ["3", "4", "5", "8"], c: 2 },
+                { q: "Geometría: Volumen de un cubo de lado 3:", o: ["9", "18", "27", "81"], c: 2 }
+            ],
+            tri: [
+                { q: "Trigonometría: sen(30°) + cos(60°)", o: ["0", "1", "1/2", "2"], c: 1 },
+                { q: "Trigonometría: Simplificar: sen²x + cos²x + tan²x", o: ["sec²x", "csc²x", "cot²x", "1"], c: 0 },
+                { q: "Trigonometría: Equivalencia de 180° en radianes:", o: ["π/2", "π", "3π/2", "2π"], c: 1 },
+                { q: "Trigonometría: En triángulo rectángulo, si sen(x)=3/5, ¿cos(x)?", o: ["4/5", "3/4", "5/3", "1/2"], c: 0 },
+                { q: "Trigonometría: Valor de tan(45°):", o: ["0", "1/2", "1", "√2"], c: 2 }
+            ],
+            fis: [
+                { q: "Física: 36 km/h en m/s es:", o: ["10 m/s", "20 m/s", "36 m/s", "5 m/s"], c: 0 },
+                { q: "Física: 2da Ley de Newton, 20 N a un bloque de 4 kg. ¿Aceleración?", o: ["80", "16", "5", "24"], c: 2 },
+                { q: "Física: Unidad de Trabajo Mecánico en el SI:", o: ["Newton", "Watt", "Joule", "Pascal"], c: 2 },
+                { q: "Física: Caída libre (g=10), ¿velocidad luego de 3 s?", o: ["10", "20", "30", "15"], c: 2 },
+                { q: "Física: Fórmula de la Energía Cinética:", o: ["mgh", "1/2 mv²", "F*d", "m*a"], c: 1 }
+            ],
+            qui: [
+                { q: "Química: Si Z=11 y A=23, ¿cuántos neutrones tiene?", o: ["11", "23", "12", "34"], c: 2 },
+                { q: "Química: Alcano principal componente del gas natural:", o: ["Etano", "Propano", "Butano", "Metano"], c: 3 },
+                { q: "Química: Grupo de la tabla periódica de los gases nobles:", o: ["IA", "VIIA", "VIIIA", "IIA"], c: 2 },
+                { q: "Química: Fórmula del ácido sulfúrico:", o: ["HCl", "H2SO4", "HNO3", "NaCl"], c: 1 },
+                { q: "Química: Enlace de la molécula de agua (H2O):", o: ["Iónico", "Metálico", "Covalente", "Puente de H"], c: 2 }
+            ],
+            bio: [
+                { q: "Biología: Organela que produce energía (ATP):", o: ["Ribosoma", "Mitocondria", "Golgi", "Lisosoma"], c: 1 },
+                { q: "Biología: Proteína que da color rojo a la sangre:", o: ["Hemoglobina", "Queratina", "Colágeno", "Miosina"], c: 0 },
+                { q: "Biología: Padre de la genética:", o: ["Darwin", "Pasteur", "Mendel", "Fleming"], c: 2 },
+                { q: "Biología: ¿Cuál NO es un reino biológico?", o: ["Fungi", "Animalia", "Protista", "Mineralia"], c: 3 },
+                { q: "Biología: Organela donde ocurre la fotosíntesis:", o: ["Mitocondria", "Ribosoma", "Cloroplasto", "Núcleo"], c: 2 }
+            ],
+            len: [
+                { q: "Lenguaje: Palabra esdrújula:", o: ["Examen", "Árbol", "Pájaro", "Sutil"], c: 2 },
+                { q: "Lenguaje: Diptongos en 'El murciélago vuela':", o: ["1", "2", "3", "4"], c: 2 },
+                { q: "Lenguaje: En 'La casa roja', ¿qué es 'roja'?", o: ["Sustantivo", "Verbo", "Adjetivo", "Adverbio"], c: 2 },
+                { q: "Lenguaje: Ortografía correcta:", o: ["Hiba a venir", "Iva a venir", "Iba a decirte", "Hiva a decirte"], c: 2 },
+                { q: "Lenguaje: Palabra aguda:", o: ["Corazón", "Mesa", "Ángel", "Cántaro"], c: 0 }
+            ],
+            his: [
+                { q: "Historia: Reserva Nacional famosa en Madre de Dios:", o: ["Pacaya Samiria", "Manu", "Tambopata", "Paracas"], c: 2 },
+                { q: "Historia MDD: Boom económico entre s. XIX y XX:", o: ["Oro", "Caucho", "Guano", "Pesca"], c: 1 },
+                { q: "Historia Perú: Inca capturado en Cajamarca:", o: ["Huáscar", "Atahualpa", "Manco Inca", "Túpac Amaru"], c: 1 },
+                { q: "Historia Universal: La I Guerra Mundial terminó con el Tratado de:", o: ["Versalles", "Tordesillas", "París", "Yalta"], c: 0 },
+                { q: "Geografía MDD: Capital de la región:", o: ["Iberia", "Manu", "Puerto Maldonado", "Mazuko"], c: 2 }
+            ],
+            civ: [
+                { q: "Cívica: Órgano que organiza las elecciones en Perú:", o: ["JNE", "ONPE", "RENIEC", "TC"], c: 1 },
+                { q: "Cívica: Número actual de congresistas:", o: ["120", "130", "140", "100"], c: 1 },
+                { q: "Cívica: Constitución vigente (1993) se dio en el gobierno de:", o: ["Belaúnde", "García", "Fujimori", "Toledo"], c: 2 },
+                { q: "Cívica: Edad para ejercer la ciudadanía plena en Perú:", o: ["16", "21", "18", "25"], c: 2 },
+                { q: "Cívica: Entidad que emite el DNI:", o: ["ONPE", "JNE", "RENIEC", "PNP"], c: 2 }
+            ]
+        };
+
+        function randomQ(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        let pSelec = [];
+        for (const t in b) {
+            pSelec.push(randomQ(b[t]));
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        pSelec = shuffle(pSelec);
+
+        const qArea = document.getElementById('questions-area');
+        
+        pSelec.forEach((q, index) => {
+            const qBlock = document.createElement('div');
+            qBlock.className = 'question-block';
+            
+            let html = `<div class="question-text">${index + 1}. ${q.q}</div><div class="options">`;
+            q.o.forEach((opcion, i) => {
+                html += `
+                    <label>
+                        <input type="radio" name="q${index}" value="${i}" required>
+                        ${opcion}
+                    </label>
+                `;
+            });
+            html += `</div>`;
+            qBlock.innerHTML = html;
+            qArea.appendChild(qBlock);
+        });
+
+        document.getElementById('quiz-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let correctas = 0;
+            pSelec.forEach((q, index) => {
+                const seleccionada = document.querySelector(`input[name="q${index}"]:checked`);
+                if (seleccionada && parseInt(seleccionada.value) === q.c) {
+                    correctas++;
+                }
+            });
+
+            document.getElementById('quiz-container').style.display = 'none';
+            const rScreen = document.getElementById('result-screen');
+            const rTitle = document.getElementById('result-title');
+            const rMsg = document.getElementById('result-message');
+            
+            rScreen.style.display = 'block';
+
+            if (correctas === 12) { 
+                rTitle.innerHTML = '<span class="success">¡Ingresaste! 🎉</span>';
+                rMsg.textContent = 'Aprobaste el simulacro perfecto. Aquí tienes el internet:';
+                document.getElementById('password-display').style.display = 'block';
+                document.removeEventListener("visibilitychange", null);
+            } else {
+                rTitle.innerHTML = '<span class="fail">Desaprobado ❌</span>';
+                rMsg.textContent = `Puntaje: ${correctas} de 12. Necesitas puntaje perfecto. Ni modo, las preguntas ya cambiaron. ¡Suerte en el próximo intento!`;
+                document.getElementById('retry-btn').style.display = 'block';
+            }
+        });
+
+    } catch(error) {
+        // Si hay un error de sintaxis al copiar, se mostrará en pantalla en vez de quedarse en blanco
+        document.getElementById('questions-area').innerHTML = `<p style="color:red; font-weight:bold;">¡Error de Código Detectado! Faltó copiar una parte del código o se borró un símbolo. Mensaje de sistema: ${error.message}</p>`;
+        document.getElementById('quiz-form').querySelector('button').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
