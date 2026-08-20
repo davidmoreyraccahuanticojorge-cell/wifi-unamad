@@ -1,52 +1,189 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulacro de Admisión UNAMAD - WiFi</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f4f8; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { background-color: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 500px; width: 100%; }
-        h1 { text-align: center; color: #2c3e50; font-size: 22px; }
-        p.subtitle { text-align: center; color: #7f8c8d; font-size: 14px; margin-bottom: 20px; }
-        .question-block { margin-bottom: 20px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #fafafa; }
-        .question-text { font-weight: bold; margin-bottom: 10px; font-size: 15px; }
-        .options label { display: block; margin-bottom: 8px; cursor: pointer; padding: 8px; border-radius: 5px; transition: background-color 0.2s; font-size: 14px; }
-        .options label:hover { background-color: #e8f4fd; }
-        button { width: 100%; padding: 12px; background-color: #e74c3c; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
-        button:hover { background-color: #c0392b; }
-        #result-screen { display: none; text-align: center; padding: 20px 0; }
-        .success { color: #27ae60; }
-        .fail { color: #c0392b; }
-        .password-box { font-size: 24px; font-weight: bold; background: #eee; padding: 15px; border-radius: 8px; letter-spacing: 2px; margin: 15px 0; color: #2c3e50; }
-        .warning-text { color: #c0392b; font-weight: bold; font-size: 13px; text-align: center; margin-top: -10px; margin-bottom: 20px; padding: 10px; background-color: #fdeedc; border-radius: 5px; border: 1px solid #f39c12; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulacro de Admisión UNAMAD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root{
+        --ink:#1C2B22;
+        --canopy:#1F4D3D;
+        --canopy-dark:#153729;
+        --gold:#C79A45;
+        --gold-soft:#E8D6A8;
+        --paper:#F7F4EC;
+        --paper-card:#FFFFFF;
+        --line:#E1D9C6;
+        --error:#B3402A;
+        --error-bg:#FBF0EC;
+        --success:#2F7A4D;
+        --success-bg:#EEF6EF;
+        --info-bg:#EFF5F1;
+    }
+    * { box-sizing: border-box; }
+    body{
+        margin:0; padding:24px 16px 60px;
+        background: var(--paper);
+        background-image:
+            radial-gradient(circle at 10% 0%, rgba(31,77,61,0.06), transparent 40%),
+            radial-gradient(circle at 90% 10%, rgba(199,154,69,0.10), transparent 35%);
+        font-family:'Karla', sans-serif;
+        color: var(--ink);
+        display:flex; justify-content:center;
+    }
+    .wrap{ max-width:560px; width:100%; }
+
+    .brand{ text-align:center; margin-bottom:18px; }
+    .brand .eyebrow{
+        font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+        color: var(--gold); font-weight:700; margin-bottom:6px;
+    }
+    .brand h1{
+        font-family:'Fraunces', serif; font-weight:600; font-size:26px;
+        color: var(--canopy-dark); margin:0 0 4px; letter-spacing:-0.01em;
+    }
+    .brand .leaf-rule{
+        width:64px; height:2px; margin:12px auto 0; background: var(--gold); position:relative;
+    }
+    .brand .leaf-rule::before{
+        content:"❧"; position:absolute; left:50%; top:-11px; transform:translateX(-50%);
+        color: var(--gold); font-size:16px; background:var(--paper); padding:0 6px;
+    }
+
+    .container{
+        background: var(--paper-card); border: 1px solid var(--line);
+        border-radius:16px; padding:24px;
+        box-shadow: 0 10px 30px rgba(28,43,34,0.08);
+    }
+
+    .warning-text{
+        color:var(--canopy-dark); font-size:13px; text-align:center;
+        margin-bottom:20px; padding:12px 14px; background: var(--gold-soft);
+        border-radius:10px; border:1px solid var(--gold); font-weight:600; line-height:1.45;
+    }
+    p.subtitle{ text-align:center; color:#5C6B60; font-size:13.5px; margin:0 0 22px; line-height:1.5; }
+
+    .progress-track{ height:6px; background:var(--line); border-radius:6px; margin-bottom:24px; overflow:hidden; }
+    .progress-fill{ height:100%; width:0%; background: linear-gradient(90deg, var(--canopy), var(--gold)); transition: width .25s ease; }
+
+    .question-block{ margin-bottom:18px; padding:18px; border:1px solid var(--line); border-radius:12px; background:#FCFAF5; }
+    .q-head{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+    .q-badge{
+        font-family:'Fraunces', serif; font-weight:600; font-size:12px; color:#fff;
+        background: var(--canopy); border-radius:999px; padding:3px 10px;
+        letter-spacing:.03em; white-space:nowrap;
+    }
+    .question-text{ font-weight:700; font-size:14.5px; line-height:1.45; }
+    .options label{
+        display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; cursor:pointer;
+        padding:10px 12px; border-radius:9px; border:1px solid transparent;
+        font-size:14px; transition: background-color .15s, border-color .15s;
+    }
+    .options label:hover{ background: var(--info-bg); border-color: var(--line); }
+    .options input{ margin-top:2px; accent-color: var(--canopy); }
+
+    button.submit-btn{
+        width:100%; padding:14px; background: var(--canopy); color:#fff; border:none;
+        border-radius:10px; font-family:'Fraunces', serif; font-size:16px; font-weight:600;
+        cursor:pointer; transition: background-color .2s; letter-spacing:.01em;
+    }
+    button.submit-btn:hover{ background: var(--canopy-dark); }
+
+    #result-screen{ display:none; }
+    .result-header{ text-align:center; padding:6px 0 6px; }
+    .result-header h1{ font-family:'Fraunces', serif; font-size:24px; margin:0 0 6px; }
+    .success{ color: var(--success); }
+    .fail{ color: var(--error); }
+    #result-message{ text-align:center; color:#5C6B60; font-size:14px; margin:0 0 18px; line-height:1.5; }
+
+    .score-ring{
+        width:96px; height:96px; border-radius:50%; margin:0 auto 18px;
+        display:flex; align-items:center; justify-content:center;
+        background: conic-gradient(var(--canopy) calc(var(--pct,0)*1%), var(--line) 0);
+    }
+    .score-ring-inner{
+        width:76px; height:76px; border-radius:50%; background:var(--paper-card);
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+    }
+    .score-ring-inner .n{ font-family:'Fraunces', serif; font-weight:700; font-size:20px; color:var(--canopy-dark); }
+    .score-ring-inner .d{ font-size:10px; color:#5C6B60; letter-spacing:.05em; }
+
+    .password-box{
+        font-family:'Fraunces', serif; font-size:24px; font-weight:700;
+        background: var(--success-bg); border:1px dashed var(--success);
+        padding:16px; border-radius:12px; letter-spacing:3px; margin:14px 0;
+        color: var(--canopy-dark); text-align:center;
+    }
+    #password-display p{ text-align:center; font-size:13.5px; color:#5C6B60; margin-bottom:0; }
+
+    .review-heading{
+        font-family:'Fraunces', serif; font-size:15px; font-weight:600;
+        color: var(--canopy-dark); margin:22px 0 12px; text-align:center;
+    }
+    .review-item{ border:1px solid #EFD3C9; background: var(--error-bg); border-radius:12px; padding:16px; margin-bottom:12px; }
+    .review-item .rq{ font-weight:700; font-size:14px; margin-bottom:8px; color:var(--ink); line-height:1.4; }
+    .review-item .row{ font-size:13px; margin-bottom:4px; }
+    .review-item .your-answer{ color: var(--error); }
+    .review-item .correct-answer{ color: var(--success); }
+    .review-item .explain{
+        margin-top:10px; font-size:13px; line-height:1.5; background: var(--info-bg);
+        border-left:3px solid var(--canopy); padding:10px 12px; border-radius:6px; color:var(--ink);
+    }
+    .review-item .explain b{ color: var(--canopy-dark); }
+
+    #retry-btn{
+        display:none; margin-top:8px; width:100%; padding:13px; background: var(--gold);
+        color:var(--canopy-dark); border:none; border-radius:10px;
+        font-family:'Fraunces', serif; font-weight:600; font-size:15px; cursor:pointer;
+    }
+    #retry-btn:hover{ filter:brightness(0.95); }
+
+    .footer-note{ text-align:center; font-size:11.5px; color:#8A9188; margin-top:18px; }
+</style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="container" id="quiz-container">
-    <h1>Admisión UNAMAD 📚<br>¡Gánate el WiFi!</h1>
-    <p class="warning-text">⚠️ MODO ESTRICTO: Si minimizas el navegador o cambias de aplicación para buscar en Google, el examen detectará la trampa y se anulará.</p>
-    <p class="subtitle">Resuelve 1 pregunta por cada tema del prospecto oficial para conseguir la clave.</p>
-    
-    <form id="quiz-form">
-        <div id="questions-area"></div>
-        <button type="submit">Enviar Examen</button>
-    </form>
-</div>
-
-<div class="container" id="result-screen">
-    <h1 id="result-title"></h1>
-    <p id="result-message"></p>
-    <div id="password-display" style="display: none;">
-        <p>Apto para la UNAMAD. Tu contraseña es:</p>
-        <div class="password-box">milenio1230</div>
+    <div class="brand">
+        <div class="eyebrow">Prospecto Oficial UNAMAD</div>
+        <h1>Simulacro de Admisión</h1>
+        <div class="leaf-rule"></div>
     </div>
-    <button id="retry-btn" onclick="location.reload()" style="display: none; background-color: #3498db;">Intentar de nuevo 🔄</button>
+
+    <div class="container" id="quiz-container">
+        <p class="warning-text">⚠️ MODO ESTRICTO: si minimizas el navegador o cambias de aplicación para buscar en Google, el examen detectará la trampa y se anulará.</p>
+        <p class="subtitle">14 preguntas, una por cada área del prospecto oficial de la UNAMAD. Puntaje perfecto para conseguir la clave del WiFi.</p>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+
+        <form id="quiz-form">
+            <div id="questions-area"></div>
+            <button type="submit" class="submit-btn">Enviar examen</button>
+        </form>
+    </div>
+
+    <div class="container" id="result-screen">
+        <div class="result-header">
+            <div class="score-ring" id="score-ring" style="--pct:0">
+                <div class="score-ring-inner"><span class="n" id="score-n">0/14</span><span class="d">PUNTAJE</span></div>
+            </div>
+            <h1 id="result-title"></h1>
+            <p id="result-message"></p>
+        </div>
+        <div id="password-display" style="display: none;">
+            <p>Apto para la UNAMAD. Tu contraseña es:</p>
+            <div class="password-box">milenio1230</div>
+        </div>
+        <div id="review-heading-wrap"></div>
+        <div id="review-area"></div>
+        <button id="retry-btn" onclick="location.reload()">Intentar de nuevo 🔄</button>
+    </div>
+
+    <p class="footer-note">Simulacro no oficial de práctica · Elaborado con fines de estudio</p>
 </div>
 
 <script>
-    // SISTEMA ANTI-TRAMPA (Optimizado para celular)
     document.addEventListener("visibilitychange", function() {
         if (document.hidden) {
             alert("🚨 ¡TRAMPA DETECTADA! 🚨\nTe saliste de la página para buscar la respuesta. El examen ha sido anulado.");
@@ -55,101 +192,128 @@
     });
 
     try {
-        // BANCO DE DATOS (60 preguntas en total, 244 millones de combinaciones)
+        // BANCO DE PREGUNTAS al estilo del examen real de la UNAMAD:
+        // problemas de contexto (Madre de Dios / Puerto Maldonado / Tambopata),
+        // función del lenguaje, figuras literarias, culturas preincaicas,
+        // Constitución, BCRP, filosofía y psicología — 14 áreas x 6 preguntas.
         const b = {
-            rm: [
-                { q: "RM: ¿Qué número sigue: 2, 6, 12, 20, 30...?", o: ["36", "42", "40", "38"], c: 1 },
-                { q: "RM: Juan tiene el doble de la edad de Pedro. Suman 36. ¿Edad de Pedro?", o: ["12", "24", "18", "16"], c: 0 },
-                { q: "RM: Si A*B = 2A + 3B, calcular 4*5.", o: ["23", "18", "25", "20"], c: 0 },
-                { q: "RM: Si el mañana del pasado mañana de ayer es viernes, ¿qué día es hoy?", o: ["Jueves", "Miércoles", "Viernes", "Martes"], c: 1 },
-                { q: "RM: Probabilidad de lanzar un dado y que salga par:", o: ["1/6", "1/2", "1/3", "1/4"], c: 1 }
-            ],
-            rv: [
-                { q: "RV: Sinónimo de INEFABLE:", o: ["Común", "Indescriptible", "Absurdo", "Elocuente"], c: 1 },
-                { q: "RV: Analogía - PERRO : JAURÍA ::", o: ["Pez : Manada", "Cerdo : Piara", "Ave : Cardumen", "Lobo : Rebaño"], c: 1 },
-                { q: "RV: Antónimo de EFÍMERO:", o: ["Pasajero", "Duradero", "Corto", "Leve"], c: 1 },
-                { q: "RV: Sinónimo de MENGUAR:", o: ["Aumentar", "Disminuir", "Soportar", "Crear"], c: 1 },
-                { q: "RV: Antónimo de ALTRUISMO:", o: ["Bondad", "Egoísmo", "Empatía", "Soberbia"], c: 1 }
-            ],
-            ari: [
-                { q: "Aritmética: ¿Cuánto es el 20% del 40% de 800?", o: ["64", "32", "128", "80"], c: 0 },
-                { q: "Aritmética: 4 obreros hacen una obra en 12 días. ¿En cuántos días lo harán 6 obreros?", o: ["8", "6", "10", "9"], c: 0 },
-                { q: "Aritmética: M.C.D. de 24 y 36:", o: ["12", "6", "24", "72"], c: 0 },
-                { q: "Aritmética: Promedio aritmético de 4, 8, 12 y 16:", o: ["8", "10", "12", "14"], c: 1 },
-                { q: "Aritmética: M.C.M. de 12 y 15:", o: ["30", "45", "60", "90"], c: 2 }
-            ],
-            alg: [
-                { q: "Álgebra: Resolver log₂(x + 2) = 3", o: ["6", "8", "10", "4"], c: 0 },
-                { q: "Álgebra: Desarrollar (x + 3)²", o: ["x²+9", "x²+6x+9", "x²+3x+9", "2x+6"], c: 1 },
-                { q: "Álgebra: Si x³ = 64, hallar x²", o: ["4", "16", "8", "32"], c: 1 },
-                { q: "Álgebra: Hallar x en: 3^(x-1) = 81", o: ["3", "4", "5", "6"], c: 2 },
-                { q: "Álgebra: Resolver: 2x - 5 = 11", o: ["6", "7", "8", "9"], c: 2 }
-            ],
-            geo: [
-                { q: "Geometría: Triángulo rectángulo con catetos 3 y 4. ¿Hipotenusa?", o: ["5", "6", "7", "12"], c: 0 },
-                { q: "Geometría: Suma de ángulos internos de un hexágono regular:", o: ["360°", "540°", "720°", "900°"], c: 2 },
-                { q: "Geometría: Área de círculo con diámetro 10:", o: ["10π", "25π", "50π", "100π"], c: 1 },
-                { q: "Geometría: Diagonales trazadas desde un vértice en un octágono:", o: ["3", "4", "5", "8"], c: 2 },
-                { q: "Geometría: Volumen de un cubo de lado 3:", o: ["9", "18", "27", "81"], c: 2 }
-            ],
-            tri: [
-                { q: "Trigonometría: sen(30°) + cos(60°)", o: ["0", "1", "1/2", "2"], c: 1 },
-                { q: "Trigonometría: Simplificar: sen²x + cos²x + tan²x", o: ["sec²x", "csc²x", "cot²x", "1"], c: 0 },
-                { q: "Trigonometría: Equivalencia de 180° en radianes:", o: ["π/2", "π", "3π/2", "2π"], c: 1 },
-                { q: "Trigonometría: En triángulo rectángulo, si sen(x)=3/5, ¿cos(x)?", o: ["4/5", "3/4", "5/3", "1/2"], c: 0 },
-                { q: "Trigonometría: Valor de tan(45°):", o: ["0", "1/2", "1", "√2"], c: 2 }
-            ],
-            fis: [
-                { q: "Física: 36 km/h en m/s es:", o: ["10 m/s", "20 m/s", "36 m/s", "5 m/s"], c: 0 },
-                { q: "Física: 2da Ley de Newton, 20 N a un bloque de 4 kg. ¿Aceleración?", o: ["80", "16", "5", "24"], c: 2 },
-                { q: "Física: Unidad de Trabajo Mecánico en el SI:", o: ["Newton", "Watt", "Joule", "Pascal"], c: 2 },
-                { q: "Física: Caída libre (g=10), ¿velocidad luego de 3 s?", o: ["10", "20", "30", "15"], c: 2 },
-                { q: "Física: Fórmula de la Energía Cinética:", o: ["mgh", "1/2 mv²", "F*d", "m*a"], c: 1 }
-            ],
-            qui: [
-                { q: "Química: Si Z=11 y A=23, ¿cuántos neutrones tiene?", o: ["11", "23", "12", "34"], c: 2 },
-                { q: "Química: Alcano principal componente del gas natural:", o: ["Etano", "Propano", "Butano", "Metano"], c: 3 },
-                { q: "Química: Grupo de la tabla periódica de los gases nobles:", o: ["IA", "VIIA", "VIIIA", "IIA"], c: 2 },
-                { q: "Química: Fórmula del ácido sulfúrico:", o: ["HCl", "H2SO4", "HNO3", "NaCl"], c: 1 },
-                { q: "Química: Enlace de la molécula de agua (H2O):", o: ["Iónico", "Metálico", "Covalente", "Puente de H"], c: 2 }
-            ],
-            bio: [
-                { q: "Biología: Organela que produce energía (ATP):", o: ["Ribosoma", "Mitocondria", "Golgi", "Lisosoma"], c: 1 },
-                { q: "Biología: Proteína que da color rojo a la sangre:", o: ["Hemoglobina", "Queratina", "Colágeno", "Miosina"], c: 0 },
-                { q: "Biología: Padre de la genética:", o: ["Darwin", "Pasteur", "Mendel", "Fleming"], c: 2 },
-                { q: "Biología: ¿Cuál NO es un reino biológico?", o: ["Fungi", "Animalia", "Protista", "Mineralia"], c: 3 },
-                { q: "Biología: Organela donde ocurre la fotosíntesis:", o: ["Mitocondria", "Ribosoma", "Cloroplasto", "Núcleo"], c: 2 }
-            ],
-            len: [
-                { q: "Lenguaje: Palabra esdrújula:", o: ["Examen", "Árbol", "Pájaro", "Sutil"], c: 2 },
-                { q: "Lenguaje: Diptongos en 'El murciélago vuela':", o: ["1", "2", "3", "4"], c: 2 },
-                { q: "Lenguaje: En 'La casa roja', ¿qué es 'roja'?", o: ["Sustantivo", "Verbo", "Adjetivo", "Adverbio"], c: 2 },
-                { q: "Lenguaje: Ortografía correcta:", o: ["Hiba a venir", "Iva a venir", "Iba a decirte", "Hiva a decirte"], c: 2 },
-                { q: "Lenguaje: Palabra aguda:", o: ["Corazón", "Mesa", "Ángel", "Cántaro"], c: 0 }
-            ],
-            his: [
-                { q: "Historia: Reserva Nacional famosa en Madre de Dios:", o: ["Pacaya Samiria", "Manu", "Tambopata", "Paracas"], c: 2 },
-                { q: "Historia MDD: Boom económico entre s. XIX y XX:", o: ["Oro", "Caucho", "Guano", "Pesca"], c: 1 },
-                { q: "Historia Perú: Inca capturado en Cajamarca:", o: ["Huáscar", "Atahualpa", "Manco Inca", "Túpac Amaru"], c: 1 },
-                { q: "Historia Universal: La I Guerra Mundial terminó con el Tratado de:", o: ["Versalles", "Tordesillas", "París", "Yalta"], c: 0 },
-                { q: "Geografía MDD: Capital de la región:", o: ["Iberia", "Manu", "Puerto Maldonado", "Mazuko"], c: 2 }
-            ],
-            civ: [
-                { q: "Cívica: Órgano que organiza las elecciones en Perú:", o: ["JNE", "ONPE", "RENIEC", "TC"], c: 1 },
-                { q: "Cívica: Número actual de congresistas:", o: ["120", "130", "140", "100"], c: 1 },
-                { q: "Cívica: Constitución vigente (1993) se dio en el gobierno de:", o: ["Belaúnde", "García", "Fujimori", "Toledo"], c: 2 },
-                { q: "Cívica: Edad para ejercer la ciudadanía plena en Perú:", o: ["16", "21", "18", "25"], c: 2 },
-                { q: "Cívica: Entidad que emite el DNI:", o: ["ONPE", "JNE", "RENIEC", "PNP"], c: 2 }
-            ]
+            rm: { label: "Razonamiento Matemático", qs: [
+                { q: "Un vendedor de castañas en Puerto Maldonado gana S/3 por cada kg vendido más un fijo de S/50 diarios. Si un día ganó S/122 en total, ¿cuántos kg vendió?", o: ["20", "22", "24", "26"], c: 2, e: "Plantea la ecuación: 50 + 3x = 122. Restando: 3x = 72, entonces x = 24 kg." },
+                { q: "Dos guardaparques de Tambopata patrullan el mismo sendero: uno lo recorre en 4 horas y el otro en 6 horas. Si parten juntos desde extremos opuestos, ¿en cuántas horas se encuentran?", o: ["2.4 horas", "2.5 horas", "3 horas", "2 horas"], c: 0, e: "Suma sus 'velocidades' de trabajo: 1/4 + 1/6 = 5/12 del sendero por hora entre los dos. El tiempo para completar el sendero juntos es 12/5 = 2.4 horas." },
+                { q: "En un grupo de 60 postulantes que rinden el examen UNAMAD, la razón de hombres a mujeres es de 3 a 2. ¿Cuántas mujeres hay?", o: ["20", "24", "30", "36"], c: 1, e: "El total se reparte en 3+2=5 partes iguales. Cada parte vale 60/5=12. Las mujeres son 2 partes: 2×12=24." },
+                { q: "Un bote sale de Puerto Maldonado a las 8:00 a.m. a 15 km/h por el río Madre de Dios. Otro bote sale del mismo punto, en la misma dirección, a las 9:00 a.m. a 20 km/h. ¿A qué hora lo alcanza?", o: ["11:00 a.m.", "12:00 p.m.", "1:00 p.m.", "2:00 p.m."], c: 1, e: "A las 9 a.m. el primer bote ya lleva 15 km de ventaja. La velocidad de acercamiento es 20-15=5 km/h, así que tarda 15/5=3 horas más en alcanzarlo: 9 a.m. + 3 h = 12:00 p.m." },
+                { q: "La edad de Rosa es el triple de la edad de su hijo. Dentro de 10 años, la edad de Rosa será el doble de la de su hijo. ¿Cuál es la edad actual del hijo?", o: ["8", "10", "12", "15"], c: 1, e: "Si el hijo tiene x años, Rosa tiene 3x. En 10 años: 3x+10 = 2(x+10). Resolviendo: 3x+10=2x+20 → x=10." },
+                { q: "5 obreros construyen un puente peatonal en 18 días. ¿Cuántos obreros adicionales se necesitan para terminarlo en solo 10 días?", o: ["3", "4", "5", "9"], c: 1, e: "El trabajo total equivale a 5×18=90 obreros-día. Para hacerlo en 10 días se necesitan 90/10=9 obreros en total, es decir 9-5=4 obreros más." }
+            ]},
+            rv: { label: "Razonamiento Verbal", qs: [
+                { q: "Sinónimo de PERSPICAZ:", o: ["Torpe", "Agudo", "Lento", "Confuso"], c: 1, e: "Perspicaz describe a alguien que percibe y comprende las cosas con rapidez y sutileza, por eso el sinónimo es 'agudo'." },
+                { q: "Antónimo de MAGNÁNIMO:", o: ["Generoso", "Mezquino", "Noble", "Compasivo"], c: 1, e: "Magnánimo describe a quien es generoso y de espíritu elevado; su opuesto es 'mezquino', quien actúa con tacañería o pequeñez." },
+                { q: "Analogía: MÉDICO : HOSPITAL ::", o: ["Profesor : Escuela", "Piloto : Avión", "Chef : Cocina", "Juez : Ley"], c: 0, e: "La relación es persona → lugar donde ejerce su labor. Así como el médico trabaja en el hospital, el profesor trabaja en la escuela." },
+                { q: "El Chavín fue una cultura preincaica; ______, su influencia religiosa se extendió por gran parte del territorio andino.", o: ["es decir", "sin embargo", "aunque", "aunque no"], c: 0, e: "El conector 'es decir' reformula o aclara una idea anterior sin contradecirla, que es justamente lo que hace la segunda parte de la oración." },
+                { q: "Señale el término ajeno al conjunto:", o: ["Alegre", "Jovial", "Eufórico", "Taciturno"], c: 3, e: "Alegre, jovial y eufórico expresan estados de ánimo positivos; 'taciturno' significa callado y de carácter triste, por eso es el término ajeno." },
+                { q: "Sinónimo de PARSIMONIA:", o: ["Rapidez", "Calma", "Furia", "Desorden"], c: 1, e: "Parsimonia significa lentitud o tranquilidad al actuar, por eso el sinónimo correcto es 'calma'." }
+            ]},
+            ari: { label: "Aritmética", qs: [
+                { q: "¿Cuánto es el 20% del 40% de 800?", o: ["64", "32", "128", "80"], c: 0, e: "Primero el 40% de 800 = 320. Luego el 20% de 320 = 64." },
+                { q: "4 obreros hacen una obra en 12 días. ¿En cuántos días lo harán 6 obreros?", o: ["8", "6", "10", "9"], c: 0, e: "Regla de tres inversa: 4×12=48 (trabajo total). Con 6 obreros: 48÷6 = 8 días." },
+                { q: "M.C.D. de 24 y 36:", o: ["12", "6", "24", "72"], c: 0, e: "El mayor divisor común de 24 y 36 es 12." },
+                { q: "Promedio aritmético de 4, 8, 12 y 16:", o: ["8", "10", "12", "14"], c: 1, e: "Se suman los valores y se divide entre la cantidad de datos: (4+8+12+16)/4 = 10." },
+                { q: "M.C.M. de 12 y 15:", o: ["30", "45", "60", "90"], c: 2, e: "El menor múltiplo común de 12 y 15 es 60." },
+                { q: "¿Cuál es la raíz cuadrada de 169?", o: ["11", "12", "13", "14"], c: 2, e: "13 × 13 = 169, por lo tanto la raíz cuadrada de 169 es 13." }
+            ]},
+            alg: { label: "Álgebra", qs: [
+                { q: "Resolver log₂(x + 2) = 3", o: ["6", "8", "10", "4"], c: 0, e: "log₂(x+2)=3 significa 2³=x+2. Como 2³=8, entonces x=6." },
+                { q: "Desarrollar (x + 3)²", o: ["x²+9", "x²+6x+9", "x²+3x+9", "2x+6"], c: 1, e: "Producto notable (a+b)²=a²+2ab+b²: x² + 2(x)(3) + 3² = x² + 6x + 9." },
+                { q: "Si x³ = 64, hallar x²", o: ["4", "16", "8", "32"], c: 1, e: "La raíz cúbica de 64 es 4 (4³=64). Luego 4² = 16." },
+                { q: "Hallar x en: 3^(x-1) = 81", o: ["3", "4", "5", "6"], c: 2, e: "81 = 3⁴, entonces x-1=4, por lo tanto x=5." },
+                { q: "Resolver: 2x - 5 = 11", o: ["6", "7", "8", "9"], c: 2, e: "2x = 11+5 = 16, entonces x = 8." },
+                { q: "Factorizar x² - 9", o: ["(x-3)(x-3)", "(x+3)(x+3)", "(x-3)(x+3)", "(x-9)(x+1)"], c: 2, e: "Es una diferencia de cuadrados: a²-b² = (a-b)(a+b). Aquí x²-3² = (x-3)(x+3)." }
+            ]},
+            geo: { label: "Geometría", qs: [
+                { q: "Triángulo rectángulo con catetos 3 y 4. ¿Hipotenusa?", o: ["5", "6", "7", "12"], c: 0, e: "Teorema de Pitágoras: hipotenusa² = 3²+4² = 25, raíz de 25 = 5." },
+                { q: "Suma de ángulos internos de un hexágono regular:", o: ["360°", "540°", "720°", "900°"], c: 2, e: "Fórmula (n-2)×180°. Con n=6: 4×180° = 720°." },
+                { q: "Área de círculo con diámetro 10:", o: ["10π", "25π", "50π", "100π"], c: 1, e: "Radio = 5. Área = π×radio² = 25π." },
+                { q: "Diagonales trazadas desde un vértice en un octágono:", o: ["3", "4", "5", "8"], c: 2, e: "Fórmula n-3. Con n=8: 8-3 = 5." },
+                { q: "Volumen de un cubo de lado 3:", o: ["9", "18", "27", "81"], c: 2, e: "Volumen = lado³ = 3×3×3 = 27." },
+                { q: "Los ángulos internos de un triángulo suman:", o: ["90°", "180°", "270°", "360°"], c: 1, e: "En todo triángulo, la suma de sus tres ángulos internos siempre es 180°." }
+            ]},
+            tri: { label: "Trigonometría", qs: [
+                { q: "sen(30°) + cos(60°)", o: ["0", "1", "1/2", "2"], c: 1, e: "sen(30°)=1/2 y cos(60°)=1/2. Sumando: 1/2+1/2 = 1." },
+                { q: "Simplificar: sen²x + cos²x + tan²x", o: ["sec²x", "csc²x", "cot²x", "1"], c: 0, e: "sen²x+cos²x=1 (identidad fundamental). Queda 1+tan²x, que equivale a sec²x." },
+                { q: "Equivalencia de 180° en radianes:", o: ["π/2", "π", "3π/2", "2π"], c: 1, e: "360° equivale a 2π radianes, así que 180° equivale a π radianes." },
+                { q: "En triángulo rectángulo, si sen(x)=3/5, ¿cos(x)?", o: ["4/5", "3/4", "5/3", "1/2"], c: 0, e: "Triángulo 3-4-5: opuesto=3, hipotenusa=5, adyacente=4 (Pitágoras). cos(x)=adyacente/hipotenusa=4/5." },
+                { q: "Valor de tan(45°):", o: ["0", "1/2", "1", "√2"], c: 2, e: "En 45°, cateto opuesto y adyacente son iguales, por lo que tan(45°) siempre es 1." },
+                { q: "Valor de sen(90°):", o: ["0", "1/2", "1", "√2/2"], c: 2, e: "sen(90°) es un valor notable que siempre vale 1." }
+            ]},
+            fis: { label: "Física", qs: [
+                { q: "36 km/h en m/s es:", o: ["10 m/s", "20 m/s", "36 m/s", "5 m/s"], c: 0, e: "Para pasar de km/h a m/s se divide entre 3.6: 36 ÷ 3.6 = 10 m/s." },
+                { q: "2da Ley de Newton, 20 N a un bloque de 4 kg. ¿Aceleración?", o: ["80", "16", "5", "24"], c: 2, e: "F=m×a, entonces a=F/m=20/4=5 m/s²." },
+                { q: "Unidad de Trabajo Mecánico en el SI:", o: ["Newton", "Watt", "Joule", "Pascal"], c: 2, e: "El Joule mide trabajo y energía. Newton mide fuerza, Watt potencia y Pascal presión." },
+                { q: "Caída libre (g=10), ¿velocidad luego de 3 s?", o: ["10", "20", "30", "15"], c: 2, e: "v = g×t = 10×3 = 30 m/s (partiendo del reposo)." },
+                { q: "Fórmula de la Energía Cinética:", o: ["mgh", "1/2 mv²", "F*d", "m*a"], c: 1, e: "La energía cinética es 1/2 × masa × velocidad². 'mgh' es energía potencial." },
+                { q: "Un cuerpo de 10 kg, ¿cuál es su peso (g=10 m/s²)?", o: ["10 N", "50 N", "100 N", "1 N"], c: 2, e: "Peso = masa × gravedad = 10×10 = 100 N." }
+            ]},
+            qui: { label: "Química", qs: [
+                { q: "Si Z=11 y A=23, ¿cuántos neutrones tiene?", o: ["11", "23", "12", "34"], c: 2, e: "Neutrones = A (masa) - Z (protones) = 23-11 = 12." },
+                { q: "Alcano principal componente del gas natural:", o: ["Etano", "Propano", "Butano", "Metano"], c: 3, e: "El gas natural está compuesto mayormente por metano (CH₄)." },
+                { q: "Grupo de la tabla periódica de los gases nobles:", o: ["IA", "VIIA", "VIIIA", "IIA"], c: 2, e: "Los gases nobles están en el grupo VIIIA (18), la última columna de la tabla." },
+                { q: "Fórmula del ácido sulfúrico:", o: ["HCl", "H2SO4", "HNO3", "NaCl"], c: 1, e: "El ácido sulfúrico es H2SO4." },
+                { q: "Enlace de la molécula de agua (H2O):", o: ["Iónico", "Metálico", "Covalente", "Puente de H"], c: 2, e: "Entre O e H se comparten electrones dentro de la molécula, por eso el enlace es covalente." },
+                { q: "pH de una sustancia neutra:", o: ["0", "7", "14", "1"], c: 1, e: "El agua pura y las sustancias neutras tienen pH = 7." }
+            ]},
+            bio: { label: "Biología", qs: [
+                { q: "Organela que produce energía (ATP):", o: ["Ribosoma", "Mitocondria", "Golgi", "Lisosoma"], c: 1, e: "La mitocondria produce ATP mediante la respiración celular." },
+                { q: "Proteína que da color rojo a la sangre:", o: ["Hemoglobina", "Queratina", "Colágeno", "Miosina"], c: 0, e: "La hemoglobina transporta oxígeno y da a la sangre su color rojo." },
+                { q: "Padre de la genética:", o: ["Darwin", "Pasteur", "Mendel", "Fleming"], c: 2, e: "Gregor Mendel estableció las leyes de la herencia con sus experimentos con guisantes." },
+                { q: "¿Cuál NO es un reino biológico?", o: ["Fungi", "Animalia", "Protista", "Mineralia"], c: 3, e: "Los reinos son Animalia, Plantae, Fungi, Protista y Monera; 'Mineralia' no existe." },
+                { q: "Organela donde ocurre la fotosíntesis:", o: ["Mitocondria", "Ribosoma", "Cloroplasto", "Núcleo"], c: 2, e: "El cloroplasto contiene la clorofila necesaria para la fotosíntesis." },
+                { q: "Especies como algunos moluscos y crustáceos de los manglares, capaces de tolerar amplias variaciones de salinidad en su hábitat, se llaman:", o: ["Estenohalinas", "Eurihalinas", "Xerófitas", "Halófitas"], c: 1, e: "'Euri' significa amplio: las especies eurihalinas toleran un rango amplio de salinidad, a diferencia de las estenohalinas, que solo soportan un rango estrecho." }
+            ]},
+            len: { label: "Lenguaje", qs: [
+                { q: "En '¡Qué hermoso amanecer sobre el río!', predomina la función del lenguaje:", o: ["Referencial", "Apelativa", "Expresiva", "Metalingüística"], c: 2, e: "La exclamación transmite un sentimiento o emoción del hablante, por eso predomina la función expresiva (o emotiva)." },
+                { q: "Identifique la figura literaria en: 'Sus ojos, dos luceros en la noche'", o: ["Metáfora", "Hipérbole", "Anáfora", "Símil"], c: 0, e: "Se identifica una cosa con otra sin usar 'como' (los ojos SON luceros), lo cual es característico de la metáfora." },
+                { q: "'Como el aguaje resiste a la creciente, así resiste tu corazón': ¿qué figura literaria se usa?", o: ["Metáfora", "Símil", "Prosopopeya", "Hipérbaton"], c: 1, e: "Se compara explícitamente usando el nexo comparativo 'como', rasgo propio del símil (o comparación)." },
+                { q: "Señale la oración con concordancia correcta:", o: ["Los estudiante llegó tarde", "Los estudiantes llegaron tarde", "El estudiante llegaron tarde", "Los estudiantes llegó tarde"], c: 1, e: "El sujeto plural 'los estudiantes' debe concordar en número con el verbo plural 'llegaron'." },
+                { q: "En '¡Ordéname hacer silencio!', identifique la función predominante del lenguaje:", o: ["Expresiva", "Apelativa", "Poética", "Fática"], c: 1, e: "La orden busca influir en la conducta del receptor, lo cual es propio de la función apelativa o conativa." },
+                { q: "Palabra que presenta hiato:", o: ["Aire", "País", "Cielo", "Bueno"], c: 1, e: "En 'país' (pa-ís) la vocal débil tónica rompe el diptongo y forma sílabas distintas: hay hiato." }
+            ]},
+            his: { label: "Historia y Geografía", qs: [
+                { q: "Cultura considerada matriz de la civilización andina, que difundió su culto religioso (felino, serpiente, ave) durante el Horizonte Temprano:", o: ["Caral", "Chavín", "Paracas", "Wari"], c: 1, e: "Chavín de Huántar sintetizó y difundió un estilo religioso (el 'culto chavín') por gran parte del área andina durante el Horizonte Temprano." },
+                { q: "Primera ciudad conocida de América, con arquitectura piramidal, ubicada en el valle de Supe:", o: ["Caral", "Chavín", "Sipán", "Kotosh"], c: 0, e: "Caral, en el valle de Supe (Barranca), es considerada la ciudad más antigua conocida de América." },
+                { q: "Puerto Maldonado, capital de Madre de Dios, fue fundada en:", o: ["1902", "1912", "1920", "1935"], c: 0, e: "Puerto Maldonado fue fundada en 1902, durante el auge del caucho en la Amazonía." },
+                { q: "Último inca de la resistencia de Vilcabamba, ejecutado por los españoles en el Cusco en 1572:", o: ["Manco Inca", "Sayri Túpac", "Túpac Amaru I", "Titu Cusi"], c: 2, e: "Túpac Amaru I fue el último inca de Vilcabamba; fue capturado y ejecutado en la plaza del Cusco en 1572, terminando así la resistencia inca." },
+                { q: "Hecho histórico que marcó el inicio de la Segunda Guerra Mundial:", o: ["La invasión a Polonia (1939)", "El ataque a Pearl Harbor", "El Tratado de Versalles", "La Revolución rusa"], c: 0, e: "La invasión alemana a Polonia en septiembre de 1939 desencadenó la Segunda Guerra Mundial." },
+                { q: "Durante el 'boom del caucho', la mano de obra en la Amazonía peruana provino principalmente de:", o: ["Comunidades indígenas y migrantes andinos", "Colonos europeos únicamente", "Trabajadores traídos exclusivamente de África", "Inmigrantes asiáticos únicamente"], c: 0, e: "La explotación cauchera se sostuvo principalmente con mano de obra indígena amazónica y migrantes de la sierra, muchas veces en condiciones de servidumbre." }
+            ]},
+            civ: { label: "Cívica y Economía", qs: [
+                { q: "Según la Constitución vigente, el Perú se define como una república:", o: ["Unitaria, democrática, social e independiente", "Federal, oligárquica y autoritaria", "Confederada y monárquica", "Unitaria pero no soberana"], c: 0, e: "La Constitución de 1993 define al Perú como una república democrática, social, independiente y soberana." },
+                { q: "Organismo internacional cuya finalidad principal es mantener la paz y la seguridad mundial:", o: ["OEA", "UNESCO", "ONU", "OMS"], c: 2, e: "La ONU (Organización de las Naciones Unidas) fue creada específicamente para mantener la paz y la seguridad internacional." },
+                { q: "Entidad encargada de mantener la estabilidad monetaria en el Perú:", o: ["SBS", "BCRP", "SUNAT", "INEI"], c: 1, e: "El Banco Central de Reserva del Perú (BCRP) tiene como función constitucional preservar la estabilidad monetaria del país." },
+                { q: "El BCRP busca preservar principalmente el valor ______ del dinero.", o: ["nominal", "de cambio", "real", "legal"], c: 2, e: "Preservar el valor 'real' significa que con el dinero se pueda comprar en el futuro una cantidad de bienes similar a la de hoy, controlando la inflación." },
+                { q: "Poder del Estado encargado de aprobar y modificar las leyes:", o: ["Ejecutivo", "Legislativo", "Judicial", "Electoral"], c: 1, e: "El Poder Legislativo, representado por el Congreso, tiene la función de dar, interpretar y derogar las leyes." },
+                { q: "Documento que certifica la identidad y ciudadanía de una persona en el Perú:", o: ["Pasaporte", "Carné de extranjería", "DNI", "Partida de nacimiento"], c: 2, e: "El DNI (Documento Nacional de Identidad), emitido por el RENIEC, es el documento que identifica y acredita la ciudadanía peruana." }
+            ]},
+            lit: { label: "Literatura", qs: [
+                { q: "Autor de 'Los ríos profundos', novela que retrata el mundo andino peruano:", o: ["Mario Vargas Llosa", "José María Arguedas", "Ciro Alegría", "Julio Ramón Ribeyro"], c: 1, e: "José María Arguedas escribió 'Los ríos profundos' (1958), una obra clave de la narrativa indigenista peruana." },
+                { q: "Movimiento literario que exalta el 'yo' del poeta, la naturaleza y la libertad creativa, propio del siglo XIX:", o: ["Clasicismo", "Romanticismo", "Realismo", "Naturalismo"], c: 1, e: "El Romanticismo se caracteriza por la exaltación de los sentimientos, la subjetividad y la libertad frente a las normas clásicas." },
+                { q: "Obra cumbre de la literatura quechua colonial, de género dramático, que narra la historia de amor entre un jefe militar inca y una princesa:", o: ["Ollantay", "Los comentarios reales", "El licenciado Vidriera", "La Araucana"], c: 0, e: "'Ollantay' es un drama de tradición oral quechua que narra el amor prohibido entre el guerrero Ollantay y la princesa Cusi Coyllur." },
+                { q: "Género literario caracterizado por la narración de hechos ficticios en prosa, con personajes y una trama:", o: ["Lírico", "Narrativo", "Dramático", "Ensayístico"], c: 1, e: "El género narrativo incluye cuentos y novelas, donde un narrador relata sucesos protagonizados por personajes." },
+                { q: "Escritor peruano autor de 'La ciudad y los perros', Premio Nobel de Literatura 2010:", o: ["Mario Vargas Llosa", "Alfredo Bryce Echenique", "César Vallejo", "Abraham Valdelomar"], c: 0, e: "Mario Vargas Llosa escribió 'La ciudad y los perros' (1963) y recibió el Premio Nobel de Literatura en 2010." },
+                { q: "Poeta peruano autor de 'Los heraldos negros' y 'Trilce', considerado uno de los más innovadores en lengua castellana:", o: ["Javier Heraud", "César Vallejo", "Carlos Oquendo de Amat", "Martín Adán"], c: 1, e: "César Vallejo es el autor de 'Los heraldos negros' (1918) y 'Trilce' (1922), obras fundamentales de la poesía vanguardista." }
+            ]},
+            fya: { label: "Filosofía y Psicología", qs: [
+                { q: "Rama de la filosofía que estudia el fundamento del bien y el mal, y las acciones morales:", o: ["Metafísica", "Ética", "Gnoseología", "Ontología"], c: 1, e: "La ética es la disciplina filosófica que reflexiona sobre la moral, el bien, el mal y el comportamiento humano." },
+                { q: "Disciplina filosófica que estudia el origen, alcance y validez del conocimiento humano:", o: ["Axiología", "Estética", "Gnoseología", "Cosmología"], c: 2, e: "La gnoseología (o teoría del conocimiento) investiga cómo conocemos y qué validez tiene ese conocimiento." },
+                { q: "Teoría psicológica que enfatiza la autorrealización, la libertad y el crecimiento personal:", o: ["Conductismo", "Psicoanálisis", "Humanismo", "Cognitivismo"], c: 2, e: "La psicología humanista, representada por autores como Maslow y Rogers, pone énfasis en la autorrealización y el potencial humano." },
+                { q: "Psicólogo asociado al condicionamiento clásico (el experimento del perro y la campana):", o: ["Sigmund Freud", "Iván Pávlov", "Abraham Maslow", "Jean Piaget"], c: 1, e: "Iván Pávlov descubrió el condicionamiento clásico al estudiar la salivación de perros ante un estímulo asociado a la comida." },
+                { q: "Corriente filosófica que sostiene que el conocimiento proviene principalmente de la experiencia sensorial:", o: ["Racionalismo", "Empirismo", "Idealismo", "Dogmatismo"], c: 1, e: "El empirismo, defendido por autores como Locke y Hume, afirma que el conocimiento se origina en la experiencia sensible." },
+                { q: "Según la pirámide de Maslow, la necesidad situada en el nivel más alto es:", o: ["Fisiológica", "Seguridad", "Autorrealización", "Afiliación"], c: 2, e: "En la jerarquía de necesidades de Maslow, la autorrealización (desarrollar el propio potencial) ocupa la cúspide de la pirámide." }
+            ]}
         };
 
-        function randomQ(arr) {
-            return arr[Math.floor(Math.random() * arr.length)];
-        }
-
-        let pSelec = [];
-        for (const t in b) {
-            pSelec.push(randomQ(b[t]));
+        function randomQ(topicObj) {
+            const arr = topicObj.qs;
+            return { ...arr[Math.floor(Math.random() * arr.length)], topic: topicObj.label };
         }
 
         function shuffle(array) {
@@ -159,21 +323,32 @@
             }
             return array;
         }
-        
+
+        let pSelec = [];
+        for (const t in b) {
+            pSelec.push(randomQ(b[t]));
+        }
         pSelec = shuffle(pSelec);
 
         const qArea = document.getElementById('questions-area');
-        
+        const progressFill = document.getElementById('progress-fill');
+        document.getElementById('score-n').textContent = `0/${pSelec.length}`;
+
         pSelec.forEach((q, index) => {
             const qBlock = document.createElement('div');
             qBlock.className = 'question-block';
-            
-            let html = `<div class="question-text">${index + 1}. ${q.q}</div><div class="options">`;
+
+            let html = `
+                <div class="q-head">
+                    <span class="q-badge">${q.topic}</span>
+                </div>
+                <div class="question-text">${index + 1}. ${q.q}</div>
+                <div class="options">`;
             q.o.forEach((opcion, i) => {
                 html += `
                     <label>
                         <input type="radio" name="q${index}" value="${i}" required>
-                        ${opcion}
+                        <span>${opcion}</span>
                     </label>
                 `;
             });
@@ -182,14 +357,30 @@
             qArea.appendChild(qBlock);
         });
 
+        qArea.addEventListener('change', () => {
+            const answered = pSelec.filter((_, i) => document.querySelector(`input[name="q${i}"]:checked`)).length;
+            progressFill.style.width = (answered / pSelec.length * 100) + '%';
+        });
+
         document.getElementById('quiz-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             let correctas = 0;
+            const errores = [];
+
             pSelec.forEach((q, index) => {
                 const seleccionada = document.querySelector(`input[name="q${index}"]:checked`);
-                if (seleccionada && parseInt(seleccionada.value) === q.c) {
+                const valorSel = seleccionada ? parseInt(seleccionada.value) : null;
+                if (valorSel === q.c) {
                     correctas++;
+                } else {
+                    errores.push({
+                        topic: q.topic,
+                        pregunta: q.q,
+                        tuRespuesta: valorSel !== null ? q.o[valorSel] : "(sin responder)",
+                        correcta: q.o[q.c],
+                        explicacion: q.e
+                    });
                 }
             });
 
@@ -197,27 +388,51 @@
             const rScreen = document.getElementById('result-screen');
             const rTitle = document.getElementById('result-title');
             const rMsg = document.getElementById('result-message');
-            
-            rScreen.style.display = 'block';
+            const scoreRing = document.getElementById('score-ring');
+            const scoreN = document.getElementById('score-n');
+            const reviewArea = document.getElementById('review-area');
+            const reviewHeadingWrap = document.getElementById('review-heading-wrap');
 
-            if (correctas === 12) { 
+            rScreen.style.display = 'block';
+            const total = pSelec.length;
+            const pct = Math.round((correctas / total) * 100);
+            scoreRing.style.setProperty('--pct', pct);
+            scoreN.textContent = `${correctas}/${total}`;
+
+            if (correctas === total) {
                 rTitle.innerHTML = '<span class="success">¡Ingresaste! 🎉</span>';
-                rMsg.textContent = 'Aprobaste el simulacro perfecto. Aquí tienes el internet:';
+                rMsg.textContent = 'Aprobaste el simulacro con puntaje perfecto. Aquí tienes el internet:';
                 document.getElementById('password-display').style.display = 'block';
-                document.removeEventListener("visibilitychange", null);
             } else {
                 rTitle.innerHTML = '<span class="fail">Desaprobado ❌</span>';
-                rMsg.textContent = `Puntaje: ${correctas} de 12. Necesitas puntaje perfecto. Ni modo, las preguntas ya cambiaron. ¡Suerte en el próximo intento!`;
+                rMsg.textContent = 'Necesitas puntaje perfecto para ganar la clave. Revisa aquí en qué te equivocaste antes de tu próximo intento:';
                 document.getElementById('retry-btn').style.display = 'block';
+            }
+
+            if (errores.length > 0) {
+                reviewHeadingWrap.innerHTML = '<div class="review-heading">Repaso de tus errores</div>';
+                let reviewHtml = '';
+                errores.forEach((err) => {
+                    reviewHtml += `
+                        <div class="review-item">
+                            <div class="rq">${err.topic} — ${err.pregunta}</div>
+                            <div class="row your-answer">✗ Tu respuesta: ${err.tuRespuesta}</div>
+                            <div class="row correct-answer">✓ Respuesta correcta: ${err.correcta}</div>
+                            <div class="explain"><b>¿Por qué?</b> ${err.explicacion}</div>
+                        </div>
+                    `;
+                });
+                reviewArea.innerHTML = reviewHtml;
+            } else {
+                reviewHeadingWrap.innerHTML = '';
+                reviewArea.innerHTML = '';
             }
         });
 
     } catch(error) {
-        // Si hay un error de sintaxis al copiar, se mostrará en pantalla en vez de quedarse en blanco
-        document.getElementById('questions-area').innerHTML = `<p style="color:red; font-weight:bold;">¡Error de Código Detectado! Faltó copiar una parte del código o se borró un símbolo. Mensaje de sistema: ${error.message}</p>`;
+        document.getElementById('questions-area').innerHTML = `<p style="color:#B3402A; font-weight:bold;">¡Error de código detectado! Mensaje de sistema: ${error.message}</p>`;
         document.getElementById('quiz-form').querySelector('button').style.display = 'none';
     }
 </script>
-
 </body>
 </html>
